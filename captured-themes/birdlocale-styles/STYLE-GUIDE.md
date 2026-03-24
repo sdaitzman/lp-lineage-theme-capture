@@ -462,7 +462,7 @@ Also loads Font Awesome 4.2.0 from MaxCDN.
 
 ## Key Differences from Other LP Sub-sites
 
-Compared to the Aquatics sub-site style guide in `agents/aquatics-styles/`:
+Compared to the Aquatics sub-site style guide in `lp-lineage-theme-capture/captured-themes/aquatics-styles/`:
 - **Primary brand color:** Lime green `#b0bc1f` (vs Aquatics teal `#278e95`)
 - **Nav accent:** Same lime green `#b0bc1f` for borders (vs Aquatics gold `#dcc464`)
 - **Body font:** Nunito Sans (vs Aquatics also uses different fonts)

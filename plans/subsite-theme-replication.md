@@ -494,8 +494,8 @@ This recap ensures the user has a complete picture of what was achieved and what
 **Never clutter the `lp-lineage-theme-capture/captured-themes/` folder.** All files must be organized within neatly structured subfolders at the appropriate level.
 
 - **Reference screenshots** go in `lp-lineage-theme-capture/captured-themes/SITE-styles/screenshots/` (the per-page captures from Phase 1).
-- **Testing screenshots** (taken during development) go in `lp-lineage-theme-capture/captured-themes/SITE-styles/screenshots/testing/`.
-- **Never place screenshots directly in `lp-lineage-theme-capture/captured-themes/`.** Always use the sub-site's subfolder hierarchy.
+- **Testing screenshots** (taken during development to verify against captured references) go in `tmp/screenshots/` (gitignored in the parent repo). These are ephemeral and never committed.
+- **Never place screenshots directly in `lp-lineage-theme-capture/captured-themes/`.** Always use the sub-site's subfolder hierarchy for captured reference material.
 
 ```
 lp-lineage-theme-capture/captured-themes/SITE-styles/
@@ -522,11 +522,12 @@ lp-lineage-theme-capture/captured-themes/SITE-styles/
     ├── 01-home-mobile.png    (mobile reference captures)
     ├── 02-about.png
     ├── 02-about-mobile.png
-    ├── ...
-    └── testing/              (development test screenshots)
-        ├── nav-hover-test.png
-        ├── mobile-header.png
-        └── ...
+    └── ...
+
+tmp/screenshots/                  (gitignored — ephemeral dev test screenshots)
+├── nav-hover-test.png
+├── mobile-header.png
+└── ...
 
 theme/scss/
 ├── _print.scss              (shared base print styles — do not modify per sub-site)
@@ -541,6 +542,6 @@ theme/scss/
 - **Never commit CSS changes without visual verification** via Playwright screenshots against the reference design.
 - Use ID selectors for specificity over Bootstrap — avoid `!important`.
 - The `plone-classic-expert-developer` skill should be invoked before any Plone/theme work.
-- All test screenshots go in `lp-lineage-theme-capture/captured-themes/SITE-styles/screenshots/testing/` with contextual names, cleaned up after each session.
+- Dev test screenshots go in `tmp/screenshots/` (gitignored) with contextual names. Captured reference screenshots are always committed to the submodule.
 - Sub-site detection in Plone Classic uses body classes like `.section-SITE` — use these for conditional styling.
 - **Submodule workflow:** Captured themes and plans live in the `lp-lineage-theme-capture` git submodule. Always commit changes inside the submodule first (`cd lp-lineage-theme-capture && git add ... && git commit ...`), then commit the updated submodule reference in the parent repo (`cd .. && git add lp-lineage-theme-capture && git commit ...`).
