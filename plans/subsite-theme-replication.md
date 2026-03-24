@@ -36,7 +36,7 @@ Before every commit in Phase 3 and Phase 4:
 
 1. **Reload** the local Plone site in Playwright (`http://localhost:8080/Plone`)
 2. **Screenshot** the affected section(s) at desktop width (1280px)
-3. **Compare** against the reference screenshot in `agents/SITE-styles/screenshots/`
+3. **Compare** against the reference screenshot in `lp-lineage-theme-capture/captured-themes/SITE-styles/screenshots/`
 4. **Test interactions** — hover states, dropdowns, mobile toggler, etc.
 5. **Fix any discrepancies** found — iterate until the section visually matches
 6. **Only then commit** the changes
@@ -56,12 +56,12 @@ If the server is not running, start it with `./devbuild.sh` before proceeding. D
 
 ### 1.2 Capture HTML
 - Use Playwright to save full-page HTML for each URL.
-- Save to `agents/SITE-styles/html/NN-slug.html` (zero-padded, e.g. `01-home.html`).
+- Save to `lp-lineage-theme-capture/captured-themes/SITE-styles/html/NN-slug.html` (zero-padded, e.g. `01-home.html`).
 - Preserve all `<link>`, `<style>`, and inline style attributes.
 
 ### 1.3 Extract CSS
 - From the HTML `<head>`, collect all `<link rel="stylesheet">` and `@import` URLs.
-- Download each CSS file to `agents/SITE-styles/css/`.
+- Download each CSS file to `lp-lineage-theme-capture/captured-themes/SITE-styles/css/`.
 - Key files to look for:
   - Site-wide base CSS (often `base.css` or similar)
   - Site-wide custom overrides (`ploneCustom.css`)
@@ -72,19 +72,19 @@ If the server is not running, start it with `./devbuild.sh` before proceeding. D
 
 ### 1.4 Capture images from the original site
 - Examine the header, footer, hero/banner, and top content area of the home page for images that are part of the site design (logos, banner photos, background images, partner logos, icons).
-- Download these images using Playwright or direct fetch and save to `agents/SITE-styles/images/`.
+- Download these images using Playwright or direct fetch and save to `lp-lineage-theme-capture/captured-themes/SITE-styles/images/`.
 - Use descriptive filenames: `header-logo.png`, `hero-banner.jpg`, `footer-partner-logo.png`, etc.
 - Note which images are referenced via CSS (`background-image`) vs HTML (`<img>` tags) — this distinction matters for how they'll be integrated into the theme.
 - These images serve as reference material and may be needed as assets in the theme's `theme_images/` directory during Phase 3.
 
 ### 1.5 Capture screenshots
 - Use Playwright to take full-page screenshots of **every** captured URL at both widths:
-  - **Desktop (1280px):** save to `agents/SITE-styles/screenshots/NN-slug.png`
-  - **Mobile (375px):** save to `agents/SITE-styles/screenshots/NN-slug-mobile.png`
+  - **Desktop (1280px):** save to `lp-lineage-theme-capture/captured-themes/SITE-styles/screenshots/NN-slug.png`
+  - **Mobile (375px):** save to `lp-lineage-theme-capture/captured-themes/SITE-styles/screenshots/NN-slug-mobile.png`
 - Mobile screenshots are not optional — they are required for every page, not just the home page. Mobile layout differences (collapsed navs, stacked columns, hidden elements, different font sizes) must be visible in the reference material for accurate replication.
 
 ### 1.6 Write STYLE-GUIDE.md
-- Create `agents/SITE-styles/STYLE-GUIDE.md` organized by feature:
+- Create `lp-lineage-theme-capture/captured-themes/SITE-styles/STYLE-GUIDE.md` organized by feature:
   1. **Page inventory** — table of all captured pages with URLs
   2. **Color palette** — extract all CSS custom properties from the sub-site CSS; list hex values and usage
   3. **Typography** — font families (Google Fonts), heading styles, body text, special text treatments
@@ -98,9 +98,16 @@ If the server is not running, start it with `./devbuild.sh` before proceeding. D
   11. **Print styles** — document all `@media print` rules found in the captured CSS files: what elements are hidden, color overrides, layout simplifications, font changes, and any `@page` rules (margins, page size). If no print styles exist, note that explicitly so Phase 3 can create them from scratch.
 
 ### 1.7 Commit capture
-```
-git add agents/SITE-styles/
+
+Commit within the submodule first, then update the submodule reference in the parent repo:
+
+```bash
+cd lp-lineage-theme-capture
+git add captured-themes/SITE-styles/
 git commit -m "Capture SITE sub-site styles (HTML, CSS, images, screenshots, style guide)"
+cd ..
+git add lp-lineage-theme-capture
+git commit -m "Update theme capture submodule: add SITE capture"
 ```
 
 ---
@@ -158,7 +165,7 @@ Use Playwright to load `http://localhost:8080/Plone` and extract the rendered HT
 2. **Top section / hero** — the first content area below the nav (banners, hero images, lead text)
 3. **Footer** — everything in `#portal-footer-wrapper`
 
-Save these HTML snippets to `agents/SITE-styles/html/local-header.html`, `local-top-section.html`, and `local-footer.html` for reference.
+Save these HTML snippets to `lp-lineage-theme-capture/captured-themes/SITE-styles/html/local-header.html`, `local-top-section.html`, and `local-footer.html` for reference.
 
 ### 2.5.2 Compare markup against the captured reference
 
@@ -202,7 +209,7 @@ For each of the three regions, open the corresponding captured HTML from Phase 1
 - [flag missing images or content]
 
 ### Images to Transfer
-- [list all images from agents/SITE-styles/images/ that need to be
+- [list all images from lp-lineage-theme-capture/captured-themes/SITE-styles/images/ that need to be
   copied to theme/theme_images/ with recommended filenames]
 
 ### Recommended Approach
@@ -216,7 +223,7 @@ For each of the three regions, open the corresponding captured HTML from Phase 1
 
 After the user has reviewed the audit, or the sleep has elapsed:
 
-1. Copy any images needed for the theme from `agents/SITE-styles/images/` to `theme/theme_images/`.
+1. Copy any images needed for the theme from `lp-lineage-theme-capture/captured-themes/SITE-styles/images/` to `theme/theme_images/`.
 2. If images need to be added to `index.html` (e.g. a logo or decorative element), make those changes now.
 3. If images will be referenced from SCSS as `background-image`, note the paths for use in Phase 3.
 4. Commit image assets and any structural HTML changes separately from style changes:
@@ -366,7 +373,7 @@ Each commit should represent a coherent visual section or sub-section. Guideline
 
 ### 4.1 Full-page comparison
 - Use Playwright to capture full-page screenshots of the local site at each page equivalent at **both desktop (1280px) and mobile (375px)** widths.
-- Compare side-by-side with the corresponding reference screenshots in `agents/SITE-styles/screenshots/` (`NN-slug.png` for desktop, `NN-slug-mobile.png` for mobile).
+- Compare side-by-side with the corresponding reference screenshots in `lp-lineage-theme-capture/captured-themes/SITE-styles/screenshots/` (`NN-slug.png` for desktop, `NN-slug-mobile.png` for mobile).
 - Note all remaining discrepancies at both widths.
 
 ### 4.2 Interaction testing
@@ -484,14 +491,14 @@ This recap ensures the user has a complete picture of what was achieved and what
 
 ## File naming conventions and screenshot organization
 
-**Never clutter the `agents/` root folder.** All files must be organized within neatly structured subfolders at the appropriate level.
+**Never clutter the `lp-lineage-theme-capture/captured-themes/` folder.** All files must be organized within neatly structured subfolders at the appropriate level.
 
-- **Reference screenshots** go in `agents/SITE-styles/screenshots/` (the per-page captures from Phase 1).
-- **Testing screenshots** (taken during development) go in `agents/SITE-styles/screenshots/testing/`.
-- **Never place screenshots directly in `agents/`.** Always use the sub-site's subfolder hierarchy.
+- **Reference screenshots** go in `lp-lineage-theme-capture/captured-themes/SITE-styles/screenshots/` (the per-page captures from Phase 1).
+- **Testing screenshots** (taken during development) go in `lp-lineage-theme-capture/captured-themes/SITE-styles/screenshots/testing/`.
+- **Never place screenshots directly in `lp-lineage-theme-capture/captured-themes/`.** Always use the sub-site's subfolder hierarchy.
 
 ```
-agents/SITE-styles/
+lp-lineage-theme-capture/captured-themes/SITE-styles/
 ├── STYLE-GUIDE.md
 ├── css/
 │   ├── base.css
@@ -534,5 +541,6 @@ theme/scss/
 - **Never commit CSS changes without visual verification** via Playwright screenshots against the reference design.
 - Use ID selectors for specificity over Bootstrap — avoid `!important`.
 - The `plone-classic-expert-developer` skill should be invoked before any Plone/theme work.
-- All test screenshots go in `agents/` with contextual names, cleaned up after each session.
+- All test screenshots go in `lp-lineage-theme-capture/captured-themes/SITE-styles/screenshots/testing/` with contextual names, cleaned up after each session.
 - Sub-site detection in Plone Classic uses body classes like `.section-SITE` — use these for conditional styling.
+- **Submodule workflow:** Captured themes and plans live in the `lp-lineage-theme-capture` git submodule. Always commit changes inside the submodule first (`cd lp-lineage-theme-capture && git add ... && git commit ...`), then commit the updated submodule reference in the parent repo (`cd .. && git add lp-lineage-theme-capture && git commit ...`).
