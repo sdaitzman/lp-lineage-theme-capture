@@ -280,6 +280,25 @@ When working on any section, systematically consider these categories:
 - Text color, text-transform, text-decoration
 - Text alignment, white-space, word-spacing
 
+**Content text elements** — all common text types that appear in page content must be checked against the captured reference. These are frequently missed because the default Plone page may not contain examples of every type. Create or find sample content that exercises each:
+- Body paragraphs (`p`) — font, color, line-height, padding/margin
+- Unordered lists (`ul > li`) — bullet style, indentation, spacing, font
+- Ordered lists (`ol > li`) — numbering style, indentation, spacing, font
+- Nested lists — additional indent, reduced spacing between levels
+- Definition lists (`dl`, `dt`, `dd`) — term weight/color, description indentation
+- Blockquotes — font family (often serif), style, border treatment, padding
+- Inline code and preformatted text (`code`, `pre`) — font, background, padding
+- Tables (`table`, `th`, `td`) — header font/color, cell padding, border style
+- Form labels and inputs — font, weight, color, field sizing
+- Document description (`.documentDescription`) — font, color, size
+- Document byline (`.documentByLine`) — font size, color
+- Image captions (`dd.image-caption`, `.caption`) — font size, color, alignment
+- "Read more" links (`.readmore`) — font family, size, weight, text-transform
+- Intro text (`.intro`) — larger font, distinct color/weight
+- Portlet content text — font size, color within `.card.portlet` or `dl.portlet`
+- News/event listing text (`.tileHeadline`, `.tileBody`) — font size, weight
+- Alert/status messages — colors, padding, borders
+
 **Borders & decoration**
 - Border width, style, color (per-side if needed)
 - Border-radius
@@ -319,7 +338,28 @@ For each section, repeat this cycle:
 9. **Iterate** — fix every discrepancy found, re-screenshot, until the section is a visual match
 10. **Only after visual confirmation**, commit with a message describing what was styled
 
-### 3.5 Print styles
+### 3.5 Content text verification
+
+After styling all major visual sections, systematically verify that all common content text elements render correctly. This step catches font and spacing issues that are invisible on the default Plone welcome page.
+
+**How to verify:**
+1. Navigate to content pages that contain varied text: news items, event listings, folder listings, pages with rich text (lists, tables, blockquotes, images with captions).
+2. If no such content exists, create a temporary test page in Plone with sample content exercising every text type listed in the "Content text elements" checklist above.
+3. Use Playwright to screenshot the test page and compare fonts, colors, spacing, and sizing against the corresponding elements in the captured reference HTML pages.
+4. Use `playwright-cli eval` to spot-check computed styles (`fontFamily`, `fontSize`, `color`, `lineHeight`) on each element type against the reference style guide values.
+5. Pay special attention to:
+   - Lists inside `#content` — they must inherit the body font (often Open Sans), not Bootstrap or Barceloneta defaults.
+   - Nav, footer, and structural lists — these should use the nav/heading font (often Montserrat), not the body font.
+   - Tables — header cells should use the heading font/color.
+   - Form labels — should match the body font but with bold weight.
+
+**Common pitfalls:**
+- **Bootstrap CSS custom properties override direct declarations.** Bootstrap 5.3 sets `body { font-family: var(--bs-body-font-family) }` which resolves via `--bs-font-sans-serif` to a system font stack (Helvetica on macOS). Setting `body { font-family: 'Open Sans' }` alone is NOT enough — you must also override `--bs-font-sans-serif` and `--bs-body-font-family` in `:root` so that every Bootstrap component (buttons, inputs, dropdowns, cards, modals) inherits the correct font. Always verify with `getComputedStyle(document.documentElement).getPropertyValue('--bs-body-font-family')` that the CSS custom property resolved correctly, not just `getComputedStyle(element).fontFamily` which may report a font name even when the browser falls back to a different typeface.
+- Bootstrap resets override body font on `li`, `dd`, `dt` elements — explicitly set font-family on these.
+- Barceloneta may add its own list-item spacing that conflicts with the sub-site design.
+- Portlet text inside `.card` elements may inherit card styles instead of the theme's body text.
+
+### 3.6 Print styles
 
 After all visual sections are styled, review and extend print styles for this sub-site. This should be treated as its own section with its own commit.
 
@@ -350,7 +390,7 @@ After all visual sections are styled, review and extend print styles for this su
    git commit -m "Add print styles for SITE sub-site"
    ```
 
-### 3.6 Scoping commits
+### 3.7 Scoping commits
 
 Each commit should represent a coherent visual section or sub-section. Guidelines:
 
@@ -360,7 +400,7 @@ Each commit should represent a coherent visual section or sub-section. Guideline
 - **Never mix unrelated sections** in a single commit.
 - **Never commit without testing** — every commit must have been visually verified against the reference design using Playwright screenshots.
 
-### 3.6 Specificity and selector strategy
+### 3.8 Specificity and selector strategy
 
 - Use Plone's ID selectors (`#portal-globalnav`, `#content-header`, `#portal-footer-wrapper`) for specificity over Bootstrap classes — this avoids `!important`.
 - Scope sub-site-specific styles under a body class (e.g. `.section-SITE`) if the theme needs to support multiple sub-sites simultaneously.
