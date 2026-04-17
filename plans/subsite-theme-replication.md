@@ -575,6 +575,23 @@ theme/scss/
 └── theme.scss               (updated to import _custom-SITE.scss)
 ```
 
+## Issue Tracking Across Sessions
+
+Style replication sessions are often long, interrupted, and resumed later — sometimes in a new conversation. Issues discovered during one session can easily be lost if not explicitly tracked.
+
+**Practice:** Maintain an issue list throughout each session. When issues are discovered that cannot be fixed immediately (blocked on a decision, requires a different approach, or deferred by the user), record them with enough context to resume later. At the end of each session — or before a commit — review the list and ensure nothing was dropped.
+
+**Where to track:** Use the conversation's task tools during a session. For issues that persist across sessions, note them in a commit message or in the SCSS file itself as a `// TODO:` comment near the relevant code. Do not use this plan file as a running issue log — it is a process document, not a ticket tracker.
+
+**What to record per issue:**
+- What the issue is (visual discrepancy, broken injection, missing asset, etc.)
+- Why it's blocked or deferred (waiting on user input, Diazo limitation, needs Python code, etc.)
+- What the proposed fix or workaround is, if known
+
+**When resuming a session:** Before starting new work, review any `// TODO:` comments in the active `_custom-SITE.scss` file and any unresolved items from prior commits. Address or explicitly defer each one before moving on.
+
+---
+
 ## Notes
 
 - **Always start the Plone server** with `./devbuild.sh` before any visual testing. Docker Desktop must be running first.
