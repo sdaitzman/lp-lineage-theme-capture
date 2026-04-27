@@ -471,6 +471,19 @@ Defer until folder layout is stable.
 - [ ] Write `profiles/default/registry.xml` entries for `lineage.themeselection`, OR a Python upgrade step that walks content and applies the marker + theme.
 - [ ] Test: fresh Plone install (`DELETE_EXISTING: true` in `docker-compose.yml`) produces correct per-sub-site theming without manual clicks.
 
+### Phase 7 (optional, cosmetic) — Generate per-site preview screenshots
+
+Each theme's `manifest.cfg` references `preview.png`, which is shown as a thumbnail in Plone's theming control panel and `lineage.themeselection`'s per-child-site control panel. During Phases 1–3 every theme inherits a copy of the original generic Plone/Barceloneta demo screenshot — accurate for the workflow, misleading for the picker UX.
+
+This phase replaces those placeholders with real captures of each rendered theme. It's a one-pass sweep done after every theme is wired up and themeselection-bound to its child site, so each capture reflects the actual chrome the editor will see.
+
+- [ ] For each ported theme, navigate Playwright to the corresponding `/Plone/<site>` URL where its theme is active.
+- [ ] Capture a screenshot at a representative viewport size (e.g. 1280×720) and save to `themes/<site>/preview.png`, overwriting the placeholder.
+- [ ] Bump each theme's `manifest.cfg` version (decision 9) so Plone's resource cache picks up the new preview.
+- [ ] Commit per theme or in one bundled commit — they're cosmetic, low risk, easy to review together.
+
+Defer if the theming-control-panel UX is not a priority; the placeholder is harmless beyond the picker thumbnail.
+
 ---
 
 ## What stays unchanged
@@ -510,3 +523,4 @@ T-shirt sizes reflect relative complexity and risk (XS = trivial, mechanical; XL
 | 4 — `lp-base` default theme | **S** | Minimal styling; mostly Bootstrap + Barceloneta unmodified. |
 | 5 — cleanup + docs | **S** | File deletes, gitattributes pruning, CLAUDE.md updates. |
 | 6 — codified assignments (optional, deferred) | **M** | Real Plone profile work — `registry.xml` or upgrade step + fresh-install testing. Higher novelty than Phases 3–5. |
+| 7 — preview screenshot sweep (optional, cosmetic) | **S** | Playwright loop over every theme's child site URL, save to `themes/<site>/preview.png`. Mostly mechanical. |
