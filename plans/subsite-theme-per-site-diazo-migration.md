@@ -8,15 +8,28 @@ All paths below are written **relative to the parent repo root** (`lp/`), consis
 
 ---
 
+## Branch scope
+
+This plan, on the `first-4-subsite-themes` branch, ports **only the first 4 LP sub-site themes**:
+
+- `anchor`
+- `se-firemap`
+- `western-landscapes`
+- `wildland-fire`
+
+The other 7 LP sub-sites — `aquatics`, `birdlocale`, `bobscapes`, `eastern-deciduous`, `grasslands`, `literature-gateway`, `wlfw` — are **out of scope for this branch** and will be ported in future branches following the same pattern. Their existing `_custom-<site>.scss` files stay in `theme/scss/` untouched.
+
+---
+
 ## Goal
 
-Split the current single Diazo theme (`src/plonetheme.lp/src/plonetheme/lp/theme/`) into **N independent Diazo themes**, one per LP sub-site. Use `lineage.themeselection` — already installed via `requirements.txt` and `docker-compose.yml` — to bind each child-site folder to its theme. The portal root keeps a neutral default theme (`lp-base`).
+Split the current single Diazo theme (`src/plonetheme.lp/src/plonetheme/lp/theme/`) into **independent per-sub-site Diazo themes**. Use `lineage.themeselection` — already installed via `requirements.txt` and `docker-compose.yml` — to bind each child-site folder to its theme. The portal root keeps a neutral default theme (`lp-base`).
 
 This is "option (a)" from the architectural conversation. Option (b) — one theme scoped by body class — was rejected because:
 
 - `lineage.themeselection` is already a dependency and this is what it exists to do.
 - Current `_custom-<site>.scss` files declare `:root` custom properties and bare `body` rules globally; compiling multiple of them together today causes last-import-wins collisions. Option (a) makes the files independent artifacts rather than requiring every file to be religiously scoped.
-- Each sub-site visitor downloads only its own compiled CSS rather than all 11.
+- Each sub-site visitor downloads only its own compiled CSS.
 - Editor UX: sub-site theme is picked in the native Plone control panel per folder.
 
 ---
@@ -35,9 +48,9 @@ This is "option (a)" from the architectural conversation. Option (b) — one the
 
 6. **`lineage.themeselection` wiring.** **Manual**, walked through by hand for v1. Step-by-step walkthrough lives in this plan (see "Manual `lineage.themeselection` configuration walkthrough" below) and gets ported into `CLAUDE.md` in Phase 5. Codifying the mapping via `registry.xml` is deferred to a possible Phase 6 once the folder layout is stable.
 
-7. **Theme naming.** **Bare names**: `anchor`, `aquatics`, `bobscapes`, etc. No `l-p-` prefix. Matches the `themes/<site>/` directory names exactly. The Plone theming control panel and `lineage.themeselection` dropdowns will show these as-is.
+7. **Theme naming.** **Bare names**: `anchor`, `se-firemap`, `western-landscapes`, etc. No `l-p-` prefix. Matches the `themes/<site>/` directory names exactly. The Plone theming control panel and `lineage.themeselection` dropdowns will show these as-is.
 
-8. **Aquatics canonical source.** `theme/scss/_custom.scss` (the 1517-line "original") is canonical. `theme/scss/_custom-aquatics.scss` (the 1259-line "v1 agentic pass") is deleted in Phase 5. The aquatics theme directory uses the contents of `_custom.scss`, renamed to `_custom.scss` in its new location (no name change needed since it loses the site prefix).
+8. **Aquatics canonical source.** *Deferred — out of scope on this branch.* When aquatics is later ported on a future branch, `theme/scss/_custom.scss` (the 1517-line "original") is the canonical source over `_custom-aquatics.scss` (the 1259-line "v1 agentic pass"). For now both stay untracked / under `theme/scss/`.
 
 9. **`manifest.cfg` cache-busting version.** Date-based **`YYYY.MM.DD`** format (e.g. `2026.04.27`). Bumped manually only when meaningful CSS or chrome changes ship — typo fixes don't need a bump. Append `.N` if multiple bumps happen the same day (`2026.04.27.2`). Rationale: human-readable in the control panel, no build-time mutation of committed files (which a git-SHA approach would require), discipline is light.
 
@@ -74,17 +87,12 @@ src/plonetheme.lp/src/plonetheme/lp/
     │   │   └── _custom.scss                 # Was theme/scss/_custom-anchor.scss
     │   ├── styles/theme{.css,.css.map,.min.css,.min.css.map}
     │   └── theme_images/                    # Optional, only if site-specific images diverge
-    ├── aquatics/                            # Sources from theme/scss/_custom.scss (decision 8)
-    ├── bobscapes/
-    ├── grasslands/
-    ├── eastern-deciduous/
-    ├── birdlocale/
-    ├── wlfw/
-    ├── wildland-fire/
-    ├── se-firemap/
-    ├── literature-gateway/
-    └── western-landscapes/
+    ├── se-firemap/                          # Was theme/scss/_custom-se-firemap.scss
+    ├── western-landscapes/                  # Was theme/scss/_custom-western-landscapes.scss
+    └── wildland-fire/                       # Was theme/scss/_custom-wildland-fire.scss
 ```
+
+The 7 deferred sub-sites (`aquatics`, `birdlocale`, `bobscapes`, `eastern-deciduous`, `grasslands`, `literature-gateway`, `wlfw`) keep their `_custom-<site>.scss` files in `theme/scss/` and will get their own `themes/<site>/` directories on future branches.
 
 **No per-theme `package.json` or `node_modules/`.** One install at `themes/` is shared across every theme via the build orchestrator. Adding a new theme means dropping a directory under `themes/` — no new Node setup.
 
@@ -196,24 +204,22 @@ The current scripts (`css-compile-main`, `css-prefix-main`, `css-minify-main`, `
 {
   "scripts": {
     "watch": "node scripts/build-themes.mjs --watch",
-    "watch:anchor":            "node scripts/build-themes.mjs --watch --theme=anchor",
-    "watch:aquatics":          "node scripts/build-themes.mjs --watch --theme=aquatics",
-    "watch:bobscapes":         "node scripts/build-themes.mjs --watch --theme=bobscapes",
-    "watch:birdlocale":        "node scripts/build-themes.mjs --watch --theme=birdlocale",
-    "watch:eastern-deciduous": "node scripts/build-themes.mjs --watch --theme=eastern-deciduous",
-    "watch:grasslands":        "node scripts/build-themes.mjs --watch --theme=grasslands",
-    "watch:lp-base":           "node scripts/build-themes.mjs --watch --theme=lp-base",
-    "watch:literature-gateway":"node scripts/build-themes.mjs --watch --theme=literature-gateway",
-    "watch:se-firemap":        "node scripts/build-themes.mjs --watch --theme=se-firemap",
-    "watch:western-landscapes":"node scripts/build-themes.mjs --watch --theme=western-landscapes",
-    "watch:wildland-fire":     "node scripts/build-themes.mjs --watch --theme=wildland-fire",
-    "watch:wlfw":              "node scripts/build-themes.mjs --watch --theme=wlfw",
+    "watch:anchor":             "node scripts/build-themes.mjs --watch --theme=anchor",
+    "watch:lp-base":            "node scripts/build-themes.mjs --watch --theme=lp-base",
+    "watch:se-firemap":         "node scripts/build-themes.mjs --watch --theme=se-firemap",
+    "watch:western-landscapes": "node scripts/build-themes.mjs --watch --theme=western-landscapes",
+    "watch:wildland-fire":      "node scripts/build-themes.mjs --watch --theme=wildland-fire",
     "build": "node scripts/build-themes.mjs",
-    "build:anchor":            "node scripts/build-themes.mjs --theme=anchor",
-    "...": "...etc per theme"
+    "build:anchor":             "node scripts/build-themes.mjs --theme=anchor",
+    "build:lp-base":            "node scripts/build-themes.mjs --theme=lp-base",
+    "build:se-firemap":         "node scripts/build-themes.mjs --theme=se-firemap",
+    "build:western-landscapes": "node scripts/build-themes.mjs --theme=western-landscapes",
+    "build:wildland-fire":      "node scripts/build-themes.mjs --theme=wildland-fire"
   }
 }
 ```
+
+(Future branches that port additional sub-sites add their own `watch:<site>` and `build:<site>` entries.)
 
 The per-theme `watch:` and `build:` scripts can be generated/regenerated by a small helper if maintenance becomes annoying, but enumerating them explicitly keeps `npm run` autocomplete useful.
 
@@ -257,20 +263,14 @@ Each of the current files under `src/plonetheme.lp/src/plonetheme/lp/theme/scss/
 
 | Current path | New path |
 |---|---|
-| `theme/scss/_custom.scss` | `themes/aquatics/scss/_custom.scss` (canonical aquatics, per decision 8) |
-| `theme/scss/_custom-aquatics.scss` | **DELETE** in Phase 5 (per decision 8) |
 | `theme/scss/_custom-anchor.scss` | `themes/anchor/scss/_custom.scss` |
-| `theme/scss/_custom-bobscapes.scss` | `themes/bobscapes/scss/_custom.scss` |
-| `theme/scss/_custom-birdlocale.scss` | `themes/birdlocale/scss/_custom.scss` |
-| `theme/scss/_custom-eastern-deciduous.scss` | `themes/eastern-deciduous/scss/_custom.scss` |
-| `theme/scss/_custom-grasslands.scss` | `themes/grasslands/scss/_custom.scss` |
-| `theme/scss/_custom-literature-gateway.scss` | `themes/literature-gateway/scss/_custom.scss` |
 | `theme/scss/_custom-se-firemap.scss` | `themes/se-firemap/scss/_custom.scss` |
 | `theme/scss/_custom-western-landscapes.scss` | `themes/western-landscapes/scss/_custom.scss` |
 | `theme/scss/_custom-wildland-fire.scss` | `themes/wildland-fire/scss/_custom.scss` |
-| `theme/scss/_custom-wlfw.scss` | `themes/wlfw/scss/_custom.scss` |
 
-Use `git mv` (not copy + delete) so history follows the files. The aquatics row is special: `git mv theme/scss/_custom.scss themes/aquatics/scss/_custom.scss`.
+Out of scope on this branch (deferred to future branches): `_custom.scss`, `_custom-aquatics.scss`, `_custom-bobscapes.scss`, `_custom-birdlocale.scss`, `_custom-eastern-deciduous.scss`, `_custom-grasslands.scss`, `_custom-literature-gateway.scss`, `_custom-wlfw.scss`. They stay in `theme/scss/`.
+
+Use `git mv` (not copy + delete) so history follows the files.
 
 Each theme's `scss/theme.scss` becomes:
 
@@ -370,18 +370,11 @@ For each sub-site folder, repeat these steps:
 | Folder | Theme |
 |---|---|
 | `/Plone/anchor` | `anchor` |
-| `/Plone/aquatics` | `aquatics` |
-| `/Plone/bobscapes` | `bobscapes` |
-| `/Plone/birdlocale` | `birdlocale` |
-| `/Plone/eastern-deciduous` | `eastern-deciduous` |
-| `/Plone/grasslands` | `grasslands` |
-| `/Plone/literature-gateway` | `literature-gateway` |
 | `/Plone/se-firemap` | `se-firemap` |
 | `/Plone/western-landscapes` | `western-landscapes` |
 | `/Plone/wildland-fire` | `wildland-fire` |
-| `/Plone/wlfw` | `wlfw` |
 
-Folder paths assume LP sub-sites live at the portal root with slugs matching theme names. Adjust if the actual site structure differs.
+Folder paths assume LP sub-sites live at the portal root with slugs matching theme names. Adjust if the actual site structure differs. The other 7 LP sub-sites are out of scope on this branch — see Branch scope at the top.
 
 ### Troubleshooting
 
@@ -426,22 +419,25 @@ This walkthrough is duplicated into `CLAUDE.md` (parent repo) in Phase 5 so it's
 
 ### Phase 2 — Pattern validation with second theme
 
-- [ ] Create `themes/aquatics/` mirroring anchor's structure.
-- [ ] `git mv theme/scss/_custom.scss themes/aquatics/scss/_custom.scss` (decision 8: `_custom.scss` is canonical aquatics).
-- [ ] Verify the `npm run watch` orchestrator handles two themes correctly — saving in either rebuilds only that theme.
-- [ ] Manually configure `lineage.themeselection` for an `/aquatics` test folder (per walkthrough above), verify `anchor` and `aquatics` themes coexist.
+- [ ] Create `themes/se-firemap/` mirroring anchor's structure.
+- [ ] `git mv theme/scss/_custom-se-firemap.scss themes/se-firemap/scss/_custom.scss`.
+- [ ] Add `watch:se-firemap` / `build:se-firemap` to `package.json`.
+- [ ] Verify the `npm run build` orchestrator handles two themes correctly.
+- [ ] Manually configure `lineage.themeselection` for an `/se-firemap` test folder (per walkthrough above); verify `anchor` and `se-firemap` themes coexist (root → anchor, child site → se-firemap).
 - [ ] **Checkpoint with Sam.**
 
-### Phase 3 — Port remaining themes, one per commit
+### Phase 3 — Port the remaining 2 in-scope themes
 
-For each of `bobscapes`, `birdlocale`, `eastern-deciduous`, `grasslands`, `literature-gateway`, `se-firemap`, `western-landscapes`, `wildland-fire`, `wlfw`:
+For each of `western-landscapes`, `wildland-fire`:
 
 - [ ] Create `themes/<site>/` with full structure (`manifest.cfg`, `rules.xml`, `index.html`, `scss/theme.scss`).
 - [ ] `git mv theme/scss/_custom-<site>.scss themes/<site>/scss/_custom.scss`.
-- [ ] Add `watch:<site>` and `build:<site>` to `package.json`.
+- [ ] Add `watch:<site>` / `build:<site>` to `package.json`, register in `configure.zcml`.
 - [ ] `npm run build:<site>` to produce initial CSS artifacts.
 - [ ] Smoke-test via Playwright against a child-site folder configured via the walkthrough.
 - [ ] Commit per theme so reviews are bounded.
+
+The other 7 LP sub-sites (`aquatics`, `birdlocale`, `bobscapes`, `eastern-deciduous`, `grasslands`, `literature-gateway`, `wlfw`) are **out of scope on this branch** — see Branch scope at the top.
 
 ### Phase 4 — Portal default theme (`lp-base`)
 
@@ -453,15 +449,21 @@ For each of `bobscapes`, `birdlocale`, `eastern-deciduous`, `grasslands`, `liter
 
 ### Phase 5 — Cleanup
 
-- [ ] Delete `theme/scss/_custom-aquatics.scss` (decision 8 — non-canonical).
-- [ ] Delete `src/plonetheme.lp/src/plonetheme/lp/theme/` (now empty of useful content).
-- [ ] Remove the old `theme/styles/` patterns from `.gitattributes`.
+The legacy `theme/` directory **stays in place on this branch** because the 7 deferred sub-sites still have their `_custom-<site>.scss` partials there, awaiting future migration. Cleanup is scoped to artifacts that are fully replaced.
+
+- [ ] Remove the `<plone:static>` registration of `theme` (l-p-theme) from `configure.zcml` — it's no longer the source of any active theme.
+- [ ] Delete `theme/styles/` (compiled output for the legacy single-theme — no longer regenerated).
+- [ ] Remove the `theme/styles/` patterns from `.gitattributes`.
+- [ ] Delete `theme/manifest.cfg`, `theme/rules.xml`, `theme/index.html`, `theme/preview.png` (legacy single-theme chrome — superseded by per-theme copies under `themes/<site>/`).
+- [ ] Keep `theme/scss/_custom-<deferred>.scss` files for the 7 deferred sub-sites; they migrate on their own future branches.
+- [ ] Keep `theme/theme_images/` for now since deferred SCSS partials still reference its paths; future branches that port a deferred site move the relevant assets into `themes/<site>/theme_images/`.
 - [ ] Update `CLAUDE.md` (parent repo):
   - Rewrite "Theme / Frontend" section: replace `cd src/plonetheme.lp/src/plonetheme/lp/theme/` with `cd src/plonetheme.lp/src/plonetheme/lp/themes/`. Update commands to reflect the orchestrator (`npm run watch`, `npm run watch:<site>`, `npm run build`).
   - Rewrite "Theme layout" section: per-theme directory structure under `themes/`, single hoisted `package.json` and `node_modules/`.
+  - Note that `theme/scss/_custom-<deferred>.scss` partials remain as starting material for future per-sub-site migrations.
   - Add the manual `lineage.themeselection` walkthrough as a new section.
-- [ ] Grep for any `theme/` path references in `configure.zcml`, tests, or docs — fix or remove.
-- [ ] Run `./devbuild.sh` from clean to confirm a fresh-install path works end-to-end.
+- [ ] Grep for any `theme/` path references in `configure.zcml`, tests, or docs — fix or remove the ones that refer to the legacy single theme; leave those that refer to deferred SCSS partials.
+- [ ] Run `./devbuild.sh` from clean to confirm a fresh-install path works end-to-end with the 4 ported themes.
 
 ### Phase 6 (optional) — Codify child-site theme assignments
 
@@ -477,7 +479,7 @@ Each theme's `manifest.cfg` references `preview.png`, which is shown as a thumbn
 
 This phase replaces those placeholders with real captures of each rendered theme. It's a one-pass sweep done after every theme is wired up and themeselection-bound to its child site, so each capture reflects the actual chrome the editor will see.
 
-- [ ] For each ported theme, navigate Playwright to the corresponding `/Plone/<site>` URL where its theme is active.
+- [ ] For each in-scope theme on this branch (`anchor`, `se-firemap`, `western-landscapes`, `wildland-fire`, plus `lp-base` for the portal root), navigate Playwright to the URL where its theme is active.
 - [ ] Capture a screenshot at a representative viewport size (e.g. 1280×720) and save to `themes/<site>/preview.png`, overwriting the placeholder.
 - [ ] Bump each theme's `manifest.cfg` version (decision 9) so Plone's resource cache picks up the new preview.
 - [ ] Commit per theme or in one bundled commit — they're cosmetic, low risk, easy to review together.
@@ -501,7 +503,7 @@ Defer if the theming-control-panel UX is not a priority; the placeholder is harm
 
 - **`rules.xml` divergence over time.** Decision 3 (duplicate per theme) accepts that the 11 copies will drift. If a site-wide chrome change becomes necessary later (e.g., Plone toolbar handling), we'll be making the same edit 11 times. That's tolerated — the alternative is fighting Diazo includes.
 - **`index.html` asset paths.** Currently references `styles/theme.min.css` relatively. Stays fine per-theme. Verify no absolute `/++theme++l-p-theme/` references sneak through.
-- **Compiled CSS duplication on disk.** Each theme bundles Bootstrap + Barceloneta (~150KB pre-gzip × 11 themes = ~1.6MB on-disk and in-git). Per-request unchanged — visitor downloads one. Worth naming in commit messages to set expectations.
+- **Compiled CSS duplication on disk.** Each theme bundles Bootstrap + Barceloneta (~150KB pre-gzip per theme). On this branch with 4 in-scope themes plus `lp-base`, that's ~750KB of compiled CSS on-disk and in-git. Per-request unchanged — visitor downloads one. Worth naming in commit messages to set expectations.
 - **TinyMCE templates path move.** If editors have customized templates under `theme/tinymce-templates/`, moving to `themes/_shared/tinymce-templates/` should be transparent (Plone resolves by name), but verify in Phase 2.
 - **Tests in `src/plonetheme.lp/tests/`.** May assert on the single-theme layout. Phase 1 should grep for `theme/` path references before moving files.
 - **`lineage.themeselection` must be explicitly installed** in the Plone site — `ADDONS:` in docker-compose makes it available, not installed. Walkthrough's prerequisites cover this.
@@ -519,7 +521,7 @@ T-shirt sizes reflect relative complexity and risk (XS = trivial, mechanical; XL
 | 0 — alignment | done | All decisions resolved above. |
 | 1 — scaffold + anchor | **M** | New directory structure, new build pipeline, first theme migration, end-to-end verification. Sets the pattern for everything else. |
 | 2 — second theme + pattern validation | **S** | Reuses Phase 1's pattern; validates the orchestrator handles >1 theme and the manual themeselection walkthrough is correct. |
-| 3 — port remaining 9 themes | **S** per theme, **L** in aggregate | Mechanical once the pattern is set. Bulk of the work but low per-step novelty. |
+| 3 — port the remaining 2 in-scope themes (`western-landscapes`, `wildland-fire`) | **S** per theme | Mechanical once the pattern is set. |
 | 4 — `lp-base` default theme | **S** | Minimal styling; mostly Bootstrap + Barceloneta unmodified. |
 | 5 — cleanup + docs | **S** | File deletes, gitattributes pruning, CLAUDE.md updates. |
 | 6 — codified assignments (optional, deferred) | **M** | Real Plone profile work — `registry.xml` or upgrade step + fresh-install testing. Higher novelty than Phases 3–5. |
