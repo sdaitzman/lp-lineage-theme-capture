@@ -1,6 +1,6 @@
 # WLFW Grasslands & Savannas Sub-site Style Guide
 
-**Source URL:** https://dev.landscapepartnership.org/networks/working-lands-for-wildlife/landscapes-wildlife/landscapes/grasslands-and-savannas
+**Source URL:** https://landscapepartnership.org/networks/working-lands-for-wildlife/landscapes-wildlife/landscapes/grasslands-and-savannas
 **CSS file:** `wlfw-grassland.css` (sub-site specific, loaded last)
 **Body class:** `site-grasslands-and-savannas`
 
@@ -20,7 +20,7 @@
 | 8 | News | `/news` | `08-news.html` |
 | 9 | Workspace | `/workspace` | `09-workspace.html` |
 
-Base URL: `https://dev.landscapepartnership.org/networks/working-lands-for-wildlife/landscapes-wildlife/landscapes/grasslands-and-savannas`
+Base URL: `https://landscapepartnership.org/networks/working-lands-for-wildlife/landscapes-wildlife/landscapes/grasslands-and-savannas`
 
 ---
 

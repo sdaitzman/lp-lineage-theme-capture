@@ -1,6 +1,6 @@
 # Wildland Fire Sub-site Style Guide
 
-**Source URL:** https://dev.landscapepartnership.org/networks/working-lands-for-wildlife/wildland-fire
+**Source URL:** https://landscapepartnership.org/networks/working-lands-for-wildlife/wildland-fire
 **Sub-site CSS file:** `fire.css` (16,497 bytes)
 **Body class:** `site-wildland-fire`
 **Template class (home):** `template-fire_home`
@@ -21,7 +21,7 @@
 | 8 | Training | `/training` | `html/08-training.html` |
 | 9 | News & Events | `/news-and-events` | `html/09-news-and-events.html` |
 
-**Base URL:** `https://dev.landscapepartnership.org/networks/working-lands-for-wildlife/wildland-fire`
+**Base URL:** `https://landscapepartnership.org/networks/working-lands-for-wildlife/wildland-fire`
 
 ---
 

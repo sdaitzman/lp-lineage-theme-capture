@@ -1,6 +1,6 @@
 # Bobscapes Sub-site Style Guide
 
-> Reference captured from `https://bobscapes.org/` (redirects from `https://dev.landscapepartnership.org/networks/working-lands-for-wildlife/landscapes-wildlife/quail/bobscapes`)
+> Reference captured from `https://bobscapes.org/` (redirects from `https://landscapepartnership.org/networks/working-lands-for-wildlife/landscapes-wildlife/quail/bobscapes`)
 > Captured: 2026-03-18
 
 ---
