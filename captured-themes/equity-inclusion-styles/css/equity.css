@@ -1,0 +1,849 @@
+/* Style sheet copied from fire.css - update appropriately for Equity and Inclusivity --- */
+
+body {
+    background: #fff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+dl.portalMessage, div.attention, div.caution, div.danger, div.error, div.hint, div.important, div.note, div.tip, div.warning {
+    margin: 3em 0 1em;
+}
+.lp-footer { display: block; }
+
+body.kssActive .inlineEditable:hover, body.kssActive .formlibInlineEditable:hover {
+    padding: 0;
+    border: 1px solid #fff !important;
+    border-color: #fff;
+    cursor: text;
+    background: White url(blank.png) repeat-x;
+}
+
+/* Hide these items */
+#jumpmenu,.rss,.rss-feeds,.footer-mid,.footer-rt {
+    display: none;
+}
+
+.template-equity_home #edit-bar {
+    display: none;
+}
+
+.template-equity_home #portal-breadcrumbs {
+    display: none;
+}
+.template-equity_home .addthis_toolbox.addthis_default_style {
+    right: 2em;
+    top: -65px;
+    position: absolute;
+    z-index: 3;
+}
+
+@media only screen and (max-width: 768px) {
+.template-equity_home .addthis_toolbox.addthis_default_style {
+    right: 0;
+    top: -200px;
+}
+.addthis_toolbox.addthis_default_style {
+    right: 0;
+    top: -200px;
+}
+}
+
+#portaltab-home-link ul.submenu {
+    display: none;
+}
+
+/* Hide title and byline on pages */
+.template-document_view .documentByLine, .template-document_view .documentFirstHeading {
+    display: none !important;
+} 
+.hide-heading { display: none; } /* ---  turn off heading in grid_layout --- */
+
+
+.template-equity_home #visual-portal-wrapper {
+    max-width: 100% !important;
+}
+
+
+div.row {
+    float: none;
+    
+}
+
+#portal-column-one {
+    position: relative;
+    top: 6em;
+}
+
+#portal-columns {
+    position: relative;
+    width: 1170px;
+    margin: 20px auto;
+}
+
+@media only screen and (max-width: 1169px) {
+
+#portal-columns { width: 100%; }
+}
+
+
+#portal-column-two {
+    position: relative;
+    top: 2em;
+}
+
+.fullwidth-section { 
+    margin-bottom: 2em;
+    padding: 0;
+ }
+
+/* Portlets */
+
+.portletNavigationTree .portletHeader {
+    background: #205C90 none repeat scroll 0 0;
+    border-radius: 4px 4px 0 0;
+    text-transform: uppercase;
+    padding: 15px;
+}
+
+
+dl.portlet {
+    font-size: 90%;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 1.5em;
+}
+
+dl.portlet dt, div.portletAssignments div.portletHeader {
+    padding: 1em 1em 0.25em;
+    background: transparent;
+    line-height: normal;
+    color: #666;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 17px;
+}
+
+/* Table listing */
+
+#content table.listing {
+    width: 100%;
+}
+
+
+.addthis_toolbox.addthis_default_style {
+    right: 2em;
+    top: 1.4em;
+    position: relative;
+}
+
+#portal-breadcrumbs {
+    font-size: 85%;
+    margin: 1.5em auto 2em;
+}
+
+
+/* --- Banner Images --- */
+
+.site-equity-inclusion #portal-banner { 
+   background: #fff;
+   height: 30px; 
+   top: 45px;
+}
+.section-resources #portal-banner {
+   background: url(/key-issues/equity-inclusion/site-images/iStock-1283449654.jpg) no-repeat center / cover !important;
+   height: 500px; }
+
+.section-training-webinars #portal-banner {
+   background: url(/key-issues/equity-inclusion/site-images/iStock-1226958325.jpg) no-repeat center / cover;
+   height: 500px; }
+
+.section-community-hub #portal-banner {
+   background: url(/key-issues/equity-inclusion/site-images/acoma-pueblo/image) no-repeat center center / cover;
+   height: 500px; }
+
+
+.section-equity-inclusion-notes #portal-banner {
+ background: url(/key-issues/equity-inclusion/site-images/epic-ranch-goat-farm) no-repeat center / cover;
+ height: 500px; }
+
+
+.section-organizations-initiatives-1 #portal-banner {
+   background: url(/key-issues/equity-inclusion/site-images/buffalo-and-barbed-wire.jpg) no-repeat center / cover;
+   height: 500px; }
+
+
+.template-equity_home #portal-banner {
+    display: none !important;
+}
+.template-folder_contents #portal-banner {
+    display: none !important;
+}
+
+
+@media only screen and (max-width: 768px) {
+.section-resources #portal-banner,.section-training-webinars #portal-banner,.section-organizations-initiatives-1 #portal-banner,.section-equity-inclusion-notes #portal-banner,.section-community-hub #portal-banner  {
+   height: 200px; 
+   top: 35px !important;
+}
+}
+
+
+.nest-navigation-bar {
+    background: #788a3b;
+    display: block;
+    padding: 5px 40px;
+}
+
+
+.nest-navigation-bar img {
+    width: 320px;
+}
+
+.nest-nav-inner {
+    margin: 0 auto;
+    width: 100%;
+    padding: 1px 30px;
+}
+
+@media only screen and (max-width: 768px) {
+.nest-navigation-bar {
+    padding: 5px 0px;
+}
+.nest-nav-inner {
+    padding: 1px 5px;
+}
+}
+
+#visual-portal-wrapper {
+    background-color: #fff;
+    margin: 0 auto;
+    max-width: 100%;
+    min-height: calc(100vh - 190px);
+} 
+
+#portal-top {
+    height: 164px;
+    background-image: none;
+}
+@media only screen and (max-width: 768px) {
+  #portal-top {
+    height: 130px;
+}
+}
+
+
+#portal-header {
+    width: 100%;
+   height: 150px;
+}
+
+#portal-logo {
+ position: relative;
+    margin: 0;
+}
+
+#portal-logo img {
+   width: 480px;
+    position: relative;
+    top: 20px;
+    left: 15%;
+  transition: all .3s ease-in-out;
+}
+
+
+@media only screen and (max-width: 768px) {
+
+#portal-logo {
+    margin: 0;
+    top: 65px;
+    position: absolute;
+}
+
+#portal-logo img {
+    width: 330px;
+    height: auto;
+    left: 5%;
+    top: -40px;
+}
+}
+
+
+#portal-searchbox {
+    top: -30px;
+    right: 30px;
+   border-radius: 6px;
+}
+
+#partnerSiteSelection {
+    position: absolute;
+    right: 15px;
+    top: 145px;
+}
+
+#jumpmenu {
+    clear: right;
+    float: right;
+    margin-top: -60px;
+    position: relative;
+    width: 225px;
+}
+
+
+/* --- main navigation tabs --- */
+#globalnav-wrapper {
+    background-color: #0E1D1C;
+    border-bottom: medium none;
+    border-top: 1px solid white;
+    top: 160px;
+}
+
+#portal-globalnav {
+    background-color: #0E1D1C;
+}
+   
+#portal-globalnav li a {
+    background-color: #0E1D1C;
+    font-size: 16px;
+    font-family: 'montserrat', sans-serif;
+    font-weight: 600;
+}
+
+
+#portal-globalnav .selected a {
+    background: #DFDF9E;
+    color: #222!important;
+}
+
+#portal-globalnav a:hover, #portal-globalnav .selected a:hover {
+    background: #84984c;
+    color: #fff;
+}
+
+#portal-globalnav ul.submenu a {
+    font-weight: 400;
+}
+
+#portal-personaltools-wrapper {
+    right: 30px;
+    top: -35px;
+    position: absolute;
+}
+#portal-personaltools a { color: #fff; }
+#portal-personaltools a:visited { color: #a9e1f3 !important; }
+
+
+li#portaltab-home ul.submenu {
+    display:none;
+}
+
+@media only screen and (max-width: 768px)
+ .menu-toggle {
+    padding: 10px 15px 10px 35px;
+}
+}
+
+/* Typography */
+
+#content h1.documentFirstHeading {
+    color: #A26623;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.6em;
+    font-weight: 500;
+    margin-bottom: 0.5em;
+    margin-top: 1.5em;
+}
+
+#content h1 {
+     color: #A26623;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 2.6em;
+    font-weight: 500;
+    margin-bottom: 0.5em;
+    margin-top: 1.5em;
+}
+
+@media only screen and (max-width: 767px) {
+#content h1.documentFirstHeading, #content h1 {
+  margin-top: 0;
+}
+}
+
+h2, h3, h4, h5, h6 {
+    color: #A26623;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    line-height: 1.5em;
+    letter-spacing: -0.0115em;
+margin-bottom: 10px;
+}
+
+p {
+   font-family: 'Merriweather', serif;
+    color: #666;
+    letter-spacing: 0.01em;
+    line-height: 1.6em;
+    padding-bottom: 15px;
+}
+
+.intro {
+   font-family: 'Merriweather', serif;
+    font-size: 17px;
+    line-height: 1.7em;
+    color: #676767;
+    margin: 1em 0em;
+}
+
+.image-inline, a .image-inline, a:visited .image-inline {
+    border: none;
+    padding: 0;
+    background: #fff;
+}
+
+
+
+/* Custom footer 
+
+
+#portal-footer-wrapper {
+    margin-top: 5em;
+    background: #2e76a0;
+}
+
+#portal-footer {
+    background: #2e76a0 none repeat scroll 0 0;
+    display: block;
+    margin-top: 0;
+    height: 250px;
+}
+
+
+.footer-left {
+    display: none;
+}
+
+
+.bottom-nav {
+    text-align: left;
+    margin: 20px 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding-top: 20px;
+}
+*/
+
+.LSBox {
+    top: 40px;
+    position: relative;
+    background: #fff;
+    padding: 11px;
+    border-radius: 6px;
+    border: 1px solid #fff;
+    right: 0;
+}
+
+
+
+/* Mobile settings */
+
+
+@media only screen and (max-width: 768px) {
+
+#portal-searchbox {
+    top: 0;
+}
+
+.LSBox {
+    top: 105px;
+    background: transparent;
+    position: absolute;
+    padding: 11px;
+    border-radius: 6px;
+    border: none;
+    left: 57px;
+    width: 150px;
+}
+
+#globalnav-wrapper {
+    top: -20px;
+}
+}
+
+
+#edit-bar {
+    position: relative;
+    margin: 0 auto;
+    background-color: #84B3B3;
+    border: 0.25em solid #84B3B3;
+}
+
+#contentActionMenus {
+    background: #84B3B3;
+    }
+
+#contentActionMenus dl.actionMenu a, #contentActionMenus dl.actionMenu.activated dd {
+    background-color: #84B3B3;
+}
+
+#content-views {
+    background-color: #84B3B3;
+}
+
+.button {
+    color: #54585b;
+    font-size: 1.125rem;
+    padding: .75rem 1rem;
+    margin-bottom: 0.1875rem;
+    display: inline-block;
+    text-decoration: none;
+    border: 1px solid #888;
+    border-radius: 0.25rem;
+    text-align: center;
+    font-weight: 700;
+    transition: background .2s linear, color .2s linear, border-color .2s linear;
+    font-family: "Open Sans", Arial, sans-serif;
+    box-shadow: 2px 3px 5px -1px rgba(0, 0, 0, 0.35);
+}
+
+.button:hover {
+    border-color: transparent;
+    background: #e64c00;
+    color: #ffffff;
+}
+
+.btn-solid-orange {
+    color: #ffffff!important;
+    background: #F59E20;
+    border-color: transparent;
+}
+
+#content a.btn-solid-orange:hover {
+    background: #e64c00;
+    color: #ffffff!important;
+    border-color: transparent;
+}
+
+a.btn-solid-orange:visited {
+    color: #fff!important;
+}
+.caption {
+    padding: 0 0 10px;
+    color: #777;
+    font-size: 13px;
+}
+
+.add-fire-resources {
+    padding: 20px 10px 15px 80px;
+    margin: 2em 0;
+    background: #EBEBC2 url(fire-images/add-resource-fire.png) no-repeat;
+    background-size: 60px;
+    border: 1px solid #ccc;
+    background-position: 15px;
+    border-radius: 8px;
+   transition: all 0.2s ease-in-out;
+}
+
+.add-fire-resources:hover {
+    padding: 20px 10px 15px 80px;
+    margin: 2em 0;
+    background: #F2F2B0 url(fire-images/add-resource-fire.png) no-repeat;
+    background-size: 63px;
+    border: 1px solid #ccc;
+    background-position: 15px;
+    border-radius: 8px;
+}
+
+.add-fire-resources h3 {
+    font-size: 18px;
+    font-weight: 600!important;
+    line-height: 20px;
+    margin-top: 6px;
+    color: #EA8206;
+}
+
+.add-fire-resources p {
+    font-size: 13px;
+    margin: 0;
+    padding: 0;
+    font-style: italic;
+    line-height: 1.2em;
+}
+
+.planning-support-btn {
+    padding: 20px 10px 15px 80px;
+    margin: 2em 0;
+    background: #EBEBC2 url(fire-images/checklist.png) no-repeat;
+    background-size: 50px;
+    border: 1px solid #ccc;
+    background-position: 15px;
+    border-radius: 8px;
+   transition: all 0.2s ease-in-out;
+}
+
+.planning-support-btn:hover {
+    padding: 20px 10px 15px 80px;
+    margin: 2em 0;
+    background: #F2F2B0 url(fire-images/checklist.png) no-repeat;
+    background-size: 52px;
+    border: 1px solid #ccc;
+    background-position: 15px;
+    border-radius: 8px;
+}
+
+.planning-support-btn h3 {
+    font-size: 18px;
+    font-weight: 600!important;
+    line-height: 20px;
+    margin-top: 6px;
+    color: #EA8206;
+}
+
+.planning-support-btn p {
+    font-size: 13px;
+    margin: 0;
+    padding: 0;
+    font-style: italic;
+    line-height: 1.2em;
+}
+
+a.readmore {
+    /*background: #f7931e;
+    padding: 4px 10px;
+    color: #fff!important;
+    border-radius: 5px; */
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-bottom: none!important;
+   font-family: 'Source Sans Pro', sans-serif;
+}
+
+#content a.readmore:hover {
+    color: #f7931e !important;
+    /* background: tomato; */
+}
+
+
+.tileItem {
+    clear: both;
+}
+
+.tileHeadline {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.tileImage img {
+    width: 280px;
+    height: auto;
+}
+
+/* ---------------------------
+ Calendar Sprite for sidebar
+------------------------------ */
+ul.cal-sprite {
+  left: 1em;
+  margin: 10px 0 20px;
+  padding: 0;
+  position: relative;
+}
+.cal-sprite li {
+  display: block;
+  line-height: 45px;
+  overflow: hidden;
+  text-indent: 3.5em;
+}
+.cal-sprite li a {
+  background: url("calendar-sprite.png") no-repeat;
+  width: 200px;
+  height: 45px;
+  display: block;
+}
+/* Calendar grid */
+.cal-sprite li#grid {
+  width: 200px;
+  height: 45px;
+}
+.cal-sprite li#grid a {
+  background-position: 0px 0px;
+}
+.cal-sprite li#grid a:hover {
+  background-position: -200px 0px;
+}
+/* Add Event */
+.cal-sprite li#add-event {
+  width: 200px;
+  height: 45px;
+}
+.cal-sprite li#add-event a {
+  background-position: 0px -42px;
+}
+.cal-sprite li#add-event a:hover {
+  background-position: -200px -42px;
+}
+/* List View */
+.cal-sprite li#list-view {
+  width: 200px;
+  height: 45px;
+}
+.cal-sprite li#list-view a {
+  background-position: 0px -84px;
+}
+.cal-sprite li#list-view a:hover {
+  background-position: -200px -84px;
+}
+/* Upcoming */
+.cal-sprite li#upcoming {
+  width: 200px;
+  height: 45px;
+}
+.cal-sprite li#upcoming a {
+  background-position: 0px -126px;
+}
+.cal-sprite li#upcoming a:hover {
+  background-position: -200px -126px;
+}
+/* Past */
+.cal-sprite li#past {
+  width: 200px;
+  height: 45px;
+}
+.cal-sprite li#past a {
+  background-position: 0px -168px;
+}
+.cal-sprite li#past a:hover {
+  background-position: -200px -168px;
+}
+
+.slide-overlay {
+    position: absolute;
+    z-index: 5;
+    top: 35%;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 30px 30px 40px;
+    width: 60%;
+    left: 20%;
+    color: #fff;
+    border-radius: 6px;
+    text-align: center;
+}
+@media only screen and (max-width: 768px) {
+.slide-overlay {
+    top: 0;
+    background: rgba(0, 0, 0, 0.45);
+    padding: 30px 30px 40px;
+    width: 100%;
+    left: 0;
+    color: #fff;
+    border-radius: 0;
+    text-align: center;
+}
+}
+
+.slide-overlay-left {
+    position: absolute;
+    z-index: 5;
+    top: 30%;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 30px 30px 40px;
+    width: 38%;
+    left: 2%;
+    color: #fff;
+    border-radius: 6px;
+    text-align: center;
+}
+
+@media only screen and (max-width: 768px) {
+.slide-overlay-left {
+    top: 0;
+    background: rgba(0, 0, 0, 0.45);
+    padding: 30px 30px 40px;
+    width: 100%;
+    left: 0;
+    color: #fff;
+    border-radius: 0;
+    text-align: center;
+}
+}
+
+.listingBar {
+    padding-bottom: 50px;
+}
+
+/* STYLEGUIDE */
+
+/* colors */
+.orange { background: #f7931f; }
+.brown { background: #a26623; }
+.dark-blue { background: #205c90; }
+.light-grey { background: #f5f5f5; }
+.dark-grey { background: #676767; }
+.gold { background: #f6d514; }
+.blue { background: #6d97bf; }
+
+.company-logo img {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+    transform: scale(0.95);
+    opacity: 0.35;
+    -webkit-transition: all .4s ease;
+    -moz-transition: all .4s ease;
+    -ms-transition: all .4s ease;
+    -o-transition: all .4s ease;
+    transition: all .4s ease;
+    margin: 12px;
+    width: 150px;
+}
+.portlet#portlet-firemap {
+    border: none;
+    background: #eae493;
+}
+
+dd.image-caption {
+    color: #666;
+    font-size: 100%;
+    max-width: 100%;
+    padding: 20px;
+    text-align: center;
+}
+
+.portletNavigationTree .portletHeader {
+    margin-top: 0;
+}
+
+@media only screen and (max-width: 768px) {
+.flex-container {
+    flex-direction: column;
+}
+
+.flex-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+}
+
+.grid-item { padding: 0; }
+
+.image-right { margin: 0 0 0 2em; }
+
+@media only screen and (max-width: 768px) {
+
+.image-right.captioned {
+    max-width: 100%;
+    margin: 0;
+    float: none;
+}
+dl.image-right.captioned img {
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+}
+
+#content {
+ padding: 0 1em;
+}
+}

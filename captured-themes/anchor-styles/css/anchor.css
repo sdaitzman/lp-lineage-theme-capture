@@ -248,7 +248,7 @@ dl.portlet dt, div.portletAssignments div.portletHeader {
     height: 182px;
     position: relative;
     top: 10px;
-    left: 16%;
+    left: 15%;
   transition: all .3s ease-in-out;
 }
 
@@ -266,7 +266,7 @@ dl.portlet dt, div.portletAssignments div.portletHeader {
     height: auto!important;
     position: relative;
     top: 10px;
-    left: 10px;
+    left: 0;
 
 }
 }
@@ -655,22 +655,18 @@ dl.image-right.captioned img {
 #portal-footer .sitecredit a:hover {
     color: #f0debb !important;
   }
-/* --- ANCHOR MAP -- */
+
+/* --- ANCHOR MAP Page -- */
 .section-anchor-map #globalnav-wrapper,.section-anchor-registration-form #globalnav-wrapper,.section-anchor-models-and-ranking #globalnav-wrapper{
-    top: 185px;
+    top: 200px;
 }
 .section-anchor-map #portal-banner,.section-anchor-registration-form #portal-banner,.section-anchor-models-and-ranking #portal-banner {
   background: url(anchor-images/iStock-157431434-grasslands.jpg) no-repeat center top / cover !important;
   height: 230px;
 }
-
 .section-anchor-map #portal-logo img,.section-anchor-registration-form #portal-logo img,.section-anchor-models-and-ranking #portal-logo img {
-   width: 500px;
-   height: 157px;
-    position: relative;
-    top: 10px;
-    left: 12%;
-  transition: all .3s ease-in-out;
+   width: 94%!important;
+   height: auto;
 }
 
 .small-map {
@@ -686,6 +682,7 @@ dl.image-right.captioned img {
     height: auto;
 }
 }
+
 */ --- hide description on this newsitem -- */
 .subsection-news-inbox-end-of-year-update-aquatic-connectivity-framework .documentDescription {
   display: none;

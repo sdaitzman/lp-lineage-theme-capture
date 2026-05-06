@@ -1,0 +1,230 @@
+body {
+    background: url("gis-back.png") repeat fixed center top #FFFFFF !important;
+    margin: 0;
+    padding: 0;
+    font-size: 95%;
+}
+
+#content { 
+   margin: 1em 2em!important;
+ }
+
+.nest-navigation-bar { display: block; }
+#portal-banner { display: none; }
+
+
+.nest-nav-inner { width: 1140px; }
+
+#jumpmenu {
+    clear: right;
+    float: right;
+    position: relative;
+    right: 0;
+    top: -75px;
+    width: 225px;
+}
+
+
+#portal-top {
+    height: 260px;
+    background-image: none;
+}
+
+#portal-top, #portal-columns {
+    background-color: #FFFFFF;
+    -webkit-box-shadow: 0px 9px 18px rgba(50, 50, 50, 0.7);
+    -moz-box-shadow:    0px 9px 18px rgba(50, 50, 50, 0.7);
+    box-shadow:         0px 9px 18px rgba(50, 50, 50, 0.7);
+}
+
+
+#portal-searchbox {
+    background: transparent url("none");  
+    padding: 10px 0;
+    position: absolute;
+    right: 20px;
+    top: 40px;
+}
+
+#portal-searchbox label {
+    color: #666;
+    font-weight: normal;
+}
+
+#portal-personaltools-wrapper {
+    right: 0;
+    top: 210px;
+}
+
+#portal-column-two {
+    padding-top: 2em;
+}
+
+
+h1, h2, h3 {
+    color: #5da7e5 !important;
+    font-family: "myriad-pro",helvetica,arial,san-serif;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1.2em;
+}
+
+#portal-header {
+    background: url("none") no-repeat scroll left top transparent !important;
+    border-color: transparent;
+    border-style: none;
+}
+
+#portal-logo {
+    display: inline-block;
+    margin: 20px 20px 5px;
+}
+
+#partnerSiteSelection {
+    position: absolute;
+    right: 20px;
+    top: 90px;
+}
+
+/* --- main navigation tabs --- */
+
+#globalnav-wrapper {
+    background-color: #000000;
+    border-bottom: medium none;
+    border-top: 1px solid white;
+    height: 40px;
+    margin-bottom: 10px;
+    margin-top: 10px;
+ top: 150px;
+}
+
+#portal-globalnav {
+    background-color: #0E1D1C;
+    justify-content: left;
+}
+   
+
+#portal-globalnav li a {
+    background: #0e1d1c none repeat scroll 0 0;
+    border-right: 0.1em solid white;
+    font-family: "myriad-pro",arial,sans-serif;
+    font-size: 1.2em;
+    font-weight: 600;
+    min-width: 2.5em;
+    padding: 0.7em 0.9em;
+}
+
+#portal-globalnav a:hover, #portal-globalnav .selected a:hover {
+    background: url("none") repeat scroll 0 0 #5DA7E5;
+    color: White;
+}
+
+#portaltab-the-cooperative,
+#portaltab-research,
+#portaltab-projects, #portaltab-home {
+    display: none! important;
+}
+
+
+li#portaltab-child-home ul.submenu {
+    display:none;
+}
+
+/* --- FOOTER --- */
+
+#portal-footer {
+    background: url("none") no-repeat scroll 0 0 #44687E;
+    color: #B7CCDA;
+    font-size: 75%;
+    line-height: 2em;
+    margin: 0 0 0;
+    padding: 2em 1em;
+    text-align: center;
+}
+
+#portal-footer .rss {
+    color: #A9D8FD;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: -0.05em;
+    padding-left: 15px;
+    text-indent: 10px;
+}
+
+#portal-footer .help > a{
+    color: #A9D8FD !important;
+    font-size: 15px;
+    font-weight: bold;
+    letter-spacing: -0.05em;
+    padding-left: 0;
+}
+#portal-footer .help > a:visited{
+    color: #A9D8FD !important;
+}
+
+#portal-footer .help > a:hover{
+    color: #5DA7E5 !important;
+   
+}
+
+#portal-breadcrumbs {
+    padding-top: 10px;
+}
+
+
+.addthis_toolbox.addthis_default_style {
+    padding-top: 10px;
+}
+
+#content li, dl.portlet li {
+    display: list-item;
+    line-height: 1.5em;
+    margin-bottom: 1em;
+}
+
+.intro {
+  font-size: 125%;
+}
+
+.LSBox {
+    position: relative;
+    top: -10px;
+}
+
+input.searchPage {
+    font-size: 130% !important;
+    margin-bottom: 15px;
+    padding: 10px;
+}
+
+input.searchField {
+    -moz-appearance: none;
+}
+
+#searchGadget {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #888;
+    padding: 8px 10px;
+    width: 17em;
+}
+
+.searchButton {
+    background: #eb801f none repeat scroll 0 0;
+    border: medium none;
+    border-radius: 3px;
+    color: #fff;
+    margin-left: 5px;
+    padding: 7px 3px;
+}
+
+.searchButton:hover {
+    background: tomato none repeat scroll 0 0;
+    color: #fff;
+
+}
+
+.footer-left { margin-left: 63px;}
+@media only screen and (max-width: 768px) {
+.footer-left { margin: 10px auto;}
+}

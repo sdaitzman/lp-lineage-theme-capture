@@ -1,0 +1,1050 @@
+body {
+    background: #ffffff;
+    font-size: 100%;
+}
+/* --- Colors --- */
+
+:root {
+  --darkblue: #266074;
+  --lightblue: #3e87a0;
+  --gold: #E9DEBB;
+  --cream: #F6F3ED;
+  --green: #98a85c;
+  --orange: #f38b1a;
+  --brown: #825640;
+  --lightbrown: #d2c6b2;
+}
+
+.darkblue { background: var(--darkblue); }
+.lightblue { background: var(--lightblue); }
+.gold { background: var(--gold); }
+.cream { background: var(--cream); }
+.bg-green { background: var(--green); }
+.bg-orange { background: var(--orange); }
+.brown { background: var(--brown); }
+.lightbrown { background: var(--lightbrown); }
+
+
+/* --- color palette request from Rose --- */
+
+.tan { background: #f8f5ef; }
+.lite-brown { background: #91806e; }
+.dark-brown { background: #2f2a25; }
+.green { background: #b0bc1f; }
+.orange { background: #f88630; }
+.tabline { background: #92938a; }
+.footer-color { background: #6e7f91; }
+.dark-green { background: #7b8551; }
+.blue-1 { background: #b2c7c6; }
+.blue-2 { background: #45c3e0; }
+.blue-3 { background: #29c0e7; }
+
+/* --- WLFW original color palette --- */
+
+.wlfw-tan { background: #e8e7d5; }
+.wlfw-bg { background: #d5cfbe; }
+.wlfw-brown { background: #6e3c24; }
+.wlfw-green { background: #95a662; }
+.wlfw-lt-brown { background: #8e6747; }
+
+
+.pad15 { padding: 15px; }
+
+.section-working-lands-partnership-new #portal-breadcrumbs, .template-wlfw_home #portal-breadcrumbs,.template-wlfw_home #edit-bar { display: none; }
+
+@media only screen and (max-width: 1280px) {
+#portal-breadcrumbs {
+    margin-top: 25px;
+    padding: 10px 20px 0;
+}
+}
+#edit-bar {
+    margin: 2em;
+}
+
+.loginbutton {
+    display: none;
+}
+.section-wlfw-workspace .loginbutton {
+    display: block!important;
+}
+
+/* -- slider adjustments for WLFW -- */
+
+#cyclist-wrapper-full #cyclist h2 {
+    border-bottom: none;
+    color: #f7d25b;
+    font-weight: 400;
+}
+
+#cyclist-wrapper-full span.subhead {
+    font-family: 'Open sans';
+    font-weight: 600;
+    font-size: 14px;
+    display: block;
+    text-transform: uppercase;
+    color: #ffa536;
+    letter-spacing: 3px;
+}
+
+.slide-overlay-left {
+    top: 27%;
+    width: 30%;
+    left: 2%;
+    color: #fff;
+}
+.slide-overlay-left-40 {
+    position: absolute;
+    z-index: 5;
+    top: 20%;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 30px 30px 40px;
+    width: 48%;
+    left: 5%;
+    color: #fff;
+    border-radius: 6px;
+    text-align: left;
+}
+
+.slide-overlay-right {
+    position: absolute;
+    z-index: 5;
+    top: 18%;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 30px 30px 40px;
+    width: 49%;
+    right: 3%;
+    color: #fff;
+    border-radius: 6px;
+    text-align: left;
+}
+
+.slide-overlay {
+    top: 12%;
+    width: 54%;
+    left: 23%;
+}
+
+#cyclist-wrapper-full .indent-left {
+   margin-left: 93px;
+   padding-top: 15px;
+}
+
+@media only screen and (max-width: 768px) {
+.slide-overlay-left,.slide-overlay-left-40,.slide-overlay-right,.slide-overlay {
+    top: 10%;
+    width: 90%;
+    left: 5%;
+   text-align: center;
+}
+#cyclist-wrapper-full .indent-left {
+    margin-left: 0;
+}
+#cyclist-wrapper-full .responsive img {
+    width: 80%;
+}
+#cyclist-wrapper-full .hide-mobile {
+    display: none;
+}
+}
+
+/* ---
+#slick-slider {
+ min-height: 360px;
+}
+
+#slick-slider .featured > p {
+    line-height: 1.7em;
+    padding: 0;
+    margin-left: 0;
+}
+
+img.slick-img {
+    width: clamp(180px, 360px, 100%);
+    float: left;
+    margin: 0 2rem 1rem 0;
+    background: #fff;
+    padding: 4px;
+}
+@media only screen and (max-width: 767px) {
+ img.slick-img {
+    float: none;
+  margin: 0 0 1rem 0;
+}
+} --- */
+
+.template-wlfw_training_page h4 {
+  margin-top: 1rem;
+}
+
+/* --- large banner --- */
+
+.template-wlfw_home #portal-banner { 
+  display: none;
+ }
+
+.site-working-lands-for-wildlife.section-science #portal-banner,.site-working-lands-for-wildlife.section-get-involved #portal-banner { 
+  display:block;
+  height:90px;
+}
+
+
+.site-working-lands-for-wildlife.section-about-us #portal-banner {
+  display: block;
+  background: url(working-lands/wlfw-water-banner.jpg) no-repeat center center / cover;
+  height: 360px;
+ }
+
+@media only screen and (max-width: 1279px) {
+.site-working-lands-for-wildlife.section-about-us #portal-banner { 
+  display: block;
+  height: 360px;
+ }
+}
+
+@media only screen and (max-width: 768px) {
+.site-working-lands-for-wildlife.section-about-us #portal-banner { 
+  display: block;
+  height: 180px;
+ }
+}
+
+.subsection-landowner-information #portal-banner {
+  display: block;
+  background: url(working-lands/sheep-herder.jpg) no-repeat center center / cover;
+  height: 360px;
+ }
+
+.section-landscapes-wildlife #portal-banner {
+  display: block;
+  background: url(working-lands/benjamin-davies-Zm2n2O7Fph4-unsplash.jpg) no-repeat center center / cover;
+  height: 360px;
+ }
+
+.section-learning-tech-transfer #portal-banner {
+  display: block;
+  background: url(working-lands/laptop-and-phone.jpg) no-repeat center center / cover;
+  height: 360px;
+ }
+
+.section-issues #portal-banner {
+  display: block;
+  background: url(working-lands/longleaf-pine.jpg) no-repeat center center / cover;
+  height: 360px;
+ }
+
+.section-wlfw-news #portal-banner {
+  display: block;
+  background: url(working-lands/wildflowers.jpg) no-repeat center center / cover;
+  height: 360px;
+ }
+
+.section-wlfw-workspace #portal-banner {
+  display: block;
+  background: url(working-lands/dylan-gillis-KdeqA3aTnBY-unsplash.jpg) no-repeat center center / cover;
+  height: 400px;
+ }
+
+@media only screen and (max-width: 1279px) {
+.site-working-lands-for-wildlife #portal-banner { 
+  display: none;
+ }
+.section-wlfw-workspace #portal-banner {
+  display: block;
+  height: 105px;
+ }
+}
+
+
+@media only screen and (max-width: 600px) {
+.site-working-lands-for-wildlife #portal-banner { 
+  display: none;
+ }
+}
+
+.section-style-guide #portal-banner {
+    height: 100px;
+    display: block;
+    background: #f6f3ed;
+}
+
+/* Hide these items */
+#jumpmenu,.rss,.rss-feeds,.footer-mid,.footer-rt {
+    display: none;
+}
+
+#content {
+    margin: 1em auto;
+    width: clamp(16rem, 85%, 90%);
+}
+/* --- make homepage fullwidth --- */
+
+.template-wlfw_home #content{
+    width: 100%;
+    padding-bottom: 0!important;
+   margin: 0 auto;
+}
+
+/* --- turned off 3-29-24
+.subsection-partners #content,.section-style-guide #content {
+    margin: 1em auto;
+    width: unset;
+    padding: 0 2em 2em;
+}*/
+
+#portal-column-two {
+    margin-top: 2em;
+    padding: 1em;
+}
+
+/* --- turned off 4-2-24
+@media only screen and (max-width: 1240px) {
+ #content {
+    margin: 1em auto;
+    width: 96%;
+}
+}
+
+@media only screen and (max-width: 600px) {
+ #content {
+    margin: 1em auto;
+    width: 92%;
+}
+}--- */
+
+
+#content .callout {
+    background: #D7DEC4;
+    padding: 1.5em;
+    border-left: 1em solid #B0BC89;
+    clear: both;
+    font-size: 20px;
+    border-radius: 8px;
+    margin: 1.5em;
+}
+
+
+h1, h2, h3, h4 {
+    letter-spacing: -0.0125em;
+    line-height: 1.5em;
+    color: var(--darkblue);
+    font-family: 'Merriweather', serif;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+
+#content .documentDescription, #content #description {
+    font-size: 20px;
+    line-height: 1.6em;
+    margin: 1em 0 2em;
+    font-family: 'Merriweather';
+    font-weight: 500;
+   color: var(--darkblue);
+}
+
+
+.intro {
+    font-size: 19px;
+    line-height: 1.6em;
+    color: var(--darkblue);
+    margin: 1em 0em;
+    font-family: 'Merriweather', serif;
+}
+
+.introtext {
+    font-size: 19px;
+    letter-spacing: -0.015em;
+}
+
+.plone-powered {
+    display:block;
+    margin-top: 1.5em;
+    text-transform: uppercase;
+    margin-right: 1.5em; 
+}
+
+.nest-navigation-bar {
+    background: transparent;
+    display: block;
+    padding: 0;
+    position: absolute;
+    z-index: 5;
+}
+
+.nest-navigation-bar img {
+    width: 330px;
+}
+
+.nest-nav-inner {
+    margin: 0 1em;
+    padding: 5px;
+    width: 100%;
+}
+
+#visual-portal-wrapper {
+   background: #F6F3ED;
+    margin: 0 auto;
+    max-width: 100%;
+    min-height: calc(100vh - 190px);
+}
+
+.section-style-guide-for-site #visual-portal-wrapper {
+   background: #fff;
+    margin: 0 auto;
+    max-width: 1170px;
+}
+.section-style-guide-for-site #content {
+    margin: 0 auto;
+    max-width: 100%;
+}
+
+
+#portal-top {
+    height: 164px;
+    background-image: none;
+    background: #fff;
+}
+@media only screen and (max-width: 1024px) {
+  #portal-top { height: 150px;}
+}
+@media only screen and (max-width: 768px) {
+ #portal-top { height: 165px;}
+}
+
+#portal-header {
+   background: var(--darkblue);
+   border-color: transparent;
+   border-style: none;
+   position: relative;
+   width: 100%;
+   height: 165px;
+}
+
+#portal-logo {
+    margin: 0;
+    z-index: 15;
+    position: absolute;
+    top: 58px;
+    left: 3%;
+    transition: all .5s ease-in-out;
+}
+
+@media only screen and (max-width: 1440px) {
+#portal-logo {
+    top: 58px;
+    left: 3%;
+}
+}
+
+@media only screen and (max-width: 1024px) {
+#portal-logo {
+    top: 58px;
+    left: 3%;
+}
+}
+
+
+@media only screen and (max-width: 768px) {
+#portal-logo {
+    top: 50px;
+    left: 2%;
+}
+}
+
+@media only screen and (max-width: 600px) {
+#portal-logo {
+    top: 50px;
+    left: 35%;
+}
+}
+
+#portal-logo img {
+  width: 200px;
+  padding: 3px;
+  background: #fff;
+  border-radius: 50%;
+}
+
+@media only screen and (max-width: 1280px) {
+ #portal-logo img {
+    width: 170px;
+}
+}
+
+@media only screen and (max-width: 1180px) {
+ #portal-logo img {
+    width: 130px;
+}
+}
+@media only screen and (max-width: 768px) {
+ #portal-logo img {
+    width: 100px;
+}
+}
+
+#portal-searchbox {
+    top: 0;
+    background: transparent;
+    margin-right: 15px;
+    margin-top: 15px;
+    padding: 7px;
+}
+
+@media only screen and (max-width: 768px) {
+
+#portal-searchbox {
+   position: absolute;
+   top: 57px;
+   z-index: 10;
+}
+#portal-searchbox [type="submit"] {
+    border: none;
+    color: transparent;
+    background: no-repeat transparent url(magnifier-white.png) center center;
+    height: 25px;
+    width: 25px;
+}
+
+#searchGadget {
+    width: 8em;
+    padding: 3px;
+    border-radius: 6px;
+}
+}
+
+#partnerSiteSelection {
+    position: absolute;
+    right: 15px;
+    top: 145px;
+}
+
+#jumpmenu {
+    clear: right;
+    float: right;
+    margin-top: -60px;
+    position: relative;
+    width: 225px;
+}
+
+/* --- main navigation tabs --- */
+
+
+#globalnav-wrapper {
+    border-bottom: medium none;
+    border-top: none;
+     top: 111px;
+    background: transparent;
+}
+
+
+#portal-globalnav {
+    background-color: transparent;
+    justify-content: right;
+   z-index: 10;
+    margin-right: 2em;
+}
+@media only screen and (max-width: 1280px) {
+#portal-globalnav {
+    margin-right: 0;
+}
+}
+
+#portal-globalnav li a {
+    background-color: transparent;
+    padding: 15px 0;
+    font-size: 18px;
+    font-family: 'Public sans', sans-serif;
+    margin: 0 15px;
+    position: relative; 
+
+}
+
+#portal-globalnav a:hover, #portal-globalnav .selected a:hover {
+    background: var(--darkblue);
+    color: #fff;
+}
+
+#portal-globalnav .selected a {
+    background: var(--darkblue);
+    color: #fff;
+    border-top: 3px solid #95A664;
+    margin-top: -3px;
+}
+
+@media only screen and (max-width: 1024px) {
+ #portal-globalnav li a {
+    padding: 15px 20px;
+    font-size: 17px;
+    min-width: 3em;
+   margin: 0;
+}
+}
+
+#portaltab-home > a:hover {
+    background: #98a85c url(../menu-home-white.png) no-repeat center 15px!important;
+    text-indent: -999em;
+}
+
+#portal-globalnav a:hover {
+    background: var(--darkblue);
+    color: #fff;
+    border-top: 3px solid #95A664;
+    margin-top: -3px;
+}
+
+@media only screen and (max-width: 768px) {
+#portal-globalnav li {
+    width: 100%;
+   background: var(--green);
+}
+
+#portal-globalnav.opened {
+    top: 50px;
+}
+#portaltab-home > a {
+    background: none!important;
+    text-indent: 0;
+}
+#portaltab-home > a:hover {
+    background: var(--darkblue) url(../blank.png) no-repeat center 15px!important;
+    text-indent: 0;
+}
+}
+/* --- Adjust submenu dropdown positions so they don't fall off right side of page --- */
+
+#portaltab-get-involved ul.submenu, #portaltab-wlfw-news ul.submenu {
+  right: 0;
+}
+#portaltab-get-involved .navTreeLevel1, #portaltab-wlfw-news .navTreeLevel1, #portaltab-science .navTreeLevel1 {
+  right: 229px;
+}
+
+
+
+#portal-personaltools-wrapper {
+  right: 255px;
+  top: 25px;
+  z-index: 10;
+  background: transparent;
+}
+
+@media only screen and (max-width: 600px) {
+#portal-personaltools-wrapper {
+    right: 5px;
+    top: 40px;
+}
+}
+
+.actionMenuHeader #user-name {
+    background: transparent;
+    padding: 6px 15px;
+    color: #fff;
+}
+
+#portal-globalnav ul.submenu a {
+    background: #3e87a0 !important;
+    border-top-width: 1px;
+    font-size: 15px;
+    padding: 6px 10px;
+    color: #fff!important;
+}
+
+#portal-globalnav ul.submenu a:visited {
+    background-color: #3e87a0!important;
+    color: #fff !important;
+}
+
+#portal-globalnav ul.submenu a:hover {
+    background-color: #266074 !important;
+    color: #fff !important;
+}
+
+li#portaltab-home ul.submenu {
+    display:none;
+}
+
+#portaltab-the-literature-gateway ul.submenu {
+    display: none;
+}
+
+
+@media only screen and (max-width: 1279px) {
+
+#globalnav-wrapper {
+    top: 165px;
+}
+
+.menu-toggle {
+    display: block;
+    color: white;
+    text-align: left;
+    padding: 5px 15px 5px 35px;
+    font-size: 80%;
+    background: url(menu-toggle.png) 10px center no-repeat black;
+    z-index: 5;
+    top: 100px;
+    position: relative;
+}
+
+ #portal-globalnav{
+    display: none;
+  }
+
+  #portal-globalnav.opened{
+    display: block;
+    position: relative;
+    top: 100px;
+  }
+
+#portal-globalnav li {
+    width: 100%;
+    background: var(--green);
+}
+
+#portal-globalnav li a {
+    background-color: transparent;
+    padding: 10px 15px;
+}
+
+#portaltab-home > a {
+    background: none!important;
+    text-indent: 0;
+}
+#portaltab-home > a:hover {
+    background: var(--darkblue) url(../blank.png)!important;
+    text-indent: 0;
+}
+
+}
+
+/* Custom footer */
+
+.bottom-nav {
+    text-align: left;
+    margin: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@media only screen and (max-width: 1023px) {
+.bottom-nav {
+    text-align: center;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-top: 20px;
+    flex-direction: column;
+}
+}
+
+#portal-footer-wlfw { 
+   display: block; 
+    background: var(--darkblue);
+    color: #fff;
+    width: 100%;
+   padding: 3em 1.5em;
+   }
+
+#portal-footer {
+ display: none;
+}
+
+.eeo-statement {
+    font-size: .7rem;
+line-height:1.3em;
+margin-top: 10px;
+}
+.ft-menu {
+    color: #fff;
+    text-align: center;
+}
+
+#portal-footer .rss {
+    color: #9adff1;
+  
+}
+
+#portal-footer .help > a:link {
+    color: #9adff1;
+}
+
+#portal-siteactions {
+    background: none repeat scroll 0 0 #214f5f;
+}
+
+#content h1.documentFirstHeading {
+    color: var(--darkblue);
+    font-size: 2.5rem;
+    font-weight: 500;
+    margin-bottom: 0.5em;
+    margin-top: 1.5em;
+    letter-spacing: -0.025em;
+}
+
+#content h1 {
+    color: var(--darkblue);
+    font-size: 2.5rem;
+    font-weight: 500;
+    margin-bottom: 0.5em;
+    margin-top: 1.5em;
+    letter-spacing: -0.025em;
+}
+
+@media only screen and (max-width: 768px) {
+#content h1.documentFirstHeading {
+    font-size: 2.2rem;
+}
+
+#content h1 {
+    font-size: 2.2rem;
+}
+}
+
+.LSBox {
+    top: 0;
+    position: relative;
+    background: #fff;
+    padding: 11px;
+    border-radius: 6px;
+    border: 1px solid #fff;
+    right: 5%;
+}
+
+.LSBox .searchSection {
+    display: none;
+}
+
+/* Mobile settings */
+
+
+@media only screen and (max-width: 768px) {
+
+.LSBox {
+    top: 85px;
+    position: absolute;
+    background: transparent;
+    padding: 11px;
+    border-radius: 6px;
+    border: none;
+    left: 70px;
+    width: 140px;
+    z-index: 15;
+}
+
+#globalnav-wrapper {
+    top: -85px;
+}
+}
+
+
+#map-block {
+    background: var(--darkblue);
+    margin: 2em 0;
+    padding: 40px;
+}
+
+#species-block {
+    margin: -3em 0 0;
+    background: #6e3c24;
+}
+
+#species-block h2 {
+    margin: 0;
+    padding: 10px;
+    color: #fff;
+}
+.block-flex-end {
+ display: flex;
+ flex-direction: column;
+justify-content: flex-end;
+}
+.block-flex-end h3 {
+    margin: 0 0 10px;
+}
+
+#content a.overlay-btn-3 {
+    background: rgba(0, 0, 0, 0.5);
+    font-size: 1.6em;
+    padding: 20px;
+    border-radius: 0 0 6px 6px;
+    color: #fff !important;
+    text-align: center;
+    transition: all .5s ease-in-out;
+    width: 100%;
+    font-family: 'Montserrat';
+
+}
+
+/* Arrow link */
+
+a.link-readmore {
+    color: #fd8d58!important;
+}
+.link-readmore span:after {
+  content: "\2192" !important;
+}
+
+.tileItem {
+    border-top: none;
+}
+.tileImage {
+    background: #fff;
+}
+
+#content .tileFooter a {
+    color: var(--orange)!important;
+}
+
+dl.portlet {
+    background: #fff;
+}
+
+.grid_layout {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    place-content: flex-start;
+    gap: 25px;
+}
+
+@media only screen and (max-width: 768px) {
+.grid_layout {
+    flex-direction: column;
+}
+}
+
+.grid_layout .tileItem {
+    padding-top: 0;
+    width: 100%;
+    margin: 0;
+    flex: 0 0 23%;
+    border: 1px solid #ebeaea;
+    box-shadow: 0px 0px 0px 0px #ededed;
+    -webkit-transition: box-shadow 0.6s linear;
+    transition: box-shadow 0.3s linear;
+    background: #fff;
+}
+
+.gridImage img {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+.subsection-apps-maps-data .grid_layout .tileItem { /* --- 3-column layout on Apps, maps and data page -- */
+    flex: 0 0 31%;
+}
+@media only screen and (max-width: 1100px) {
+.subsection-apps-maps-data .grid_layout .tileItem { /* --- 2-column layout on Apps, maps and data page on smaller screens -- */
+    flex: 0 0 48%;
+}
+}
+
+.tp-card-white {
+    width: 31%;
+    height: 260px;
+    padding: 1.2rem;
+    background: white;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    transition: 0.4s ease-out;
+    flex-grow: 1;
+}
+
+.tp-card {
+    width: 31%;
+    height: 260px;
+    padding: 1.2rem;
+    background: white;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    transition: 0.4s ease-out;
+    flex-grow: 1;
+}
+
+@media only screen and (max-width: 1100px){
+.tp-card {
+    width: 49%;
+    height: 250px;
+}
+.tp-card-white {
+    width: 100%;
+    height: 250px;
+}
+}
+
+#portal-footer-wlfw .eeo-statement a {
+    font-weight: 600;
+    color: #fff!important;
+}
+
+@media only screen and (max-width: 767px){
+.black-50-block {
+    margin: 3em;
+}
+}
+.portletNavigationTree .portletHeader {
+    background: var(--darkblue);
+}
+
+.indent100 {
+    margin-left: 100px;
+    margin-top: -10px;
+    padding-bottom: 20px;
+}
+
+@media only screen and (max-width: 767px){
+.indent100 {
+ margin-left: 80px;
+    margin-top: 0;
+}
+}
+
+/* --- WLFW Homepage macros --- */
+
+.news-box {
+    padding: 0;
+}
+
+.news-box h3 {
+    font-size: 1.3rem;
+    margin-bottom: 5px;
+}
+
+.news-box h4 {
+    padding: 0;
+    margin-bottom: 5px;
+}
+
+.news-box .documentByLine {
+    border-top: none;
+}
+.btn-orange {
+    background: #f8903e;
+}
+.more-link {
+    margin-top: 1.5rem;
+}
+
+#portaltab-get-involved ul.submenu {
+  right: 0;
+}
+
+#portal-globalnav li#portaltab-wlfw-workspace ul.submenu {
+    right: 0;
+}
+ #portal-globalnav li#portaltab-wlfw-workspace ul.submenu li ul {
+    right: 228px;
+   top:4px;
+}
+@media only screen and (max-width: 767px) {
+ #portal-globalnav li#portaltab-wlfw-workspace ul.submenu li ul {
+    right: 0;
+   top:0;
+}
+}

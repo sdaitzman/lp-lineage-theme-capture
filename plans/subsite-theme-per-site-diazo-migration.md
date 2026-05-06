@@ -2,22 +2,50 @@
 
 Status: planning, not yet executed.
 Authors: Claude + Sam Daitzman.
-Context branch: `first-4-subsite-themes`.
+Context branch: `initial-subsite-themes`.
 
 All paths below are written **relative to the parent repo root** (`lp/`), consistent with the other plans in this directory.
 
 ---
 
+## Sub-site roster
+
+The 15 LP sub-sites. This is the canonical list — slugs elsewhere in this plan refer to the **Slug** column. URLs are the production source of truth for replication.
+
+| Full name | Slug | Batch | URL |
+|---|---|---|---|
+| The Anchor Approach to Connectivity | `anchor` | 1 | https://landscapepartnership.org/key-issues/anchor |
+| Western Landscapes | `western-landscapes` | 1 | https://landscapepartnership.org/networks/working-lands-for-wildlife/landscapes-wildlife/landscapes/western-landscapes |
+| Wildland Fire | `wildland-fire` | 1 | https://landscapepartnership.org/networks/working-lands-for-wildlife/wildland-fire |
+| SE FireMap | `se-firemap` | 1 | https://landscapepartnership.org/networks/working-lands-for-wildlife/wildland-fire/fire-mapping/regional-fire-mapping/se-firemap |
+| LandscapePartnership.Org | `lp-parent-site` | 2 | https://landscapepartnership.org/ |
+| Working Lands for Wildlife | `working-lands-for-wildlife` | 2 | https://landscapepartnership.org/networks/working-lands-for-wildlife |
+| Aquatics | `aquatics` | 2 | https://landscapepartnership.org/networks/working-lands-for-wildlife/landscapes-wildlife/landscapes/aquatics |
+| Eastern Deciduous Forests | `eastern-deciduous-forests` | 2 | https://landscapepartnership.org/networks/working-lands-for-wildlife/landscapes-wildlife/landscapes/eastern-deciduous-forests |
+| Grasslands and Savannas | `grasslands-and-savannas` | 2 | https://www.workinglandsforwildlife.org/landscapes-wildlife/landscapes/grasslands-and-savannas |
+| BirdLocale | `birdlocale` | 3 | https://landscapepartnership.org/networks/working-lands-for-wildlife/birdlocale |
+| Bobscapes | `bobscapes` | 3 | https://www.bobscapes.org/ |
+| The Literature Gateway | `the-literature-gateway` | 3 | https://landscapepartnership.org/networks/working-lands-for-wildlife/the-literature-gateway |
+| Ecosystem Benefits & Risks | `ecosystem-risks-benefits` | 4 | https://landscapepartnership.org/ecosystem-risks-benefits |
+| Equity & Inclusion | `equity-inclusion` | 4 | https://landscapepartnership.org/key-issues/equity-inclusion/ |
+| GIS & Conservation Planning Toolkit | `gis-planning` | 4 | https://landscapepartnership.org/maps-data/gis-planning |
+
+Most sub-sites live on `landscapepartnership.org`. Two are on different production hosts: `bobscapes` on `bobscapes.org`, `grasslands-and-savannas` on `workinglandsforwildlife.org`. The URL column in the roster is canonical for each — never use `dev.landscapepartnership.org` URLs for capture or reference.
+
+Several existing on-disk partials in `theme/scss/` use older short slugs that don't match the canonical roster: `_custom-wlfw.scss`, `_custom-eastern-deciduous.scss`, `_custom-grasslands.scss`, `_custom-literature-gateway.scss`. These get renamed to their canonical slug when migrated; until then they stay under their existing filenames. The four roster entries with no existing partials are `lp-parent-site`, `ecosystem-risks-benefits`, `equity-inclusion`, and `gis-planning`.
+
+---
+
 ## Branch scope
 
-This plan, on the `first-4-subsite-themes` branch, ports **only the first 4 LP sub-site themes**:
+This plan, on the `initial-subsite-themes` branch, ports **only these 4 sub-sites**:
 
 - `anchor`
-- `se-firemap`
 - `western-landscapes`
 - `wildland-fire`
+- `se-firemap`
 
-The other 7 LP sub-sites — `aquatics`, `birdlocale`, `bobscapes`, `eastern-deciduous`, `grasslands`, `literature-gateway`, `wlfw` — are **out of scope for this branch** and will be ported in future branches following the same pattern. Their existing `_custom-<site>.scss` files stay in `theme/scss/` untouched.
+The other 11 sub-sites in the roster are **out of scope for this branch** and will be ported in future branches following the same pattern. Their existing `_custom-<site>.scss` files (where present) stay in `theme/scss/` untouched.
 
 ---
 
@@ -92,7 +120,7 @@ src/plonetheme.lp/src/plonetheme/lp/
     └── wildland-fire/                       # Was theme/scss/_custom-wildland-fire.scss
 ```
 
-The 7 deferred sub-sites (`aquatics`, `birdlocale`, `bobscapes`, `eastern-deciduous`, `grasslands`, `literature-gateway`, `wlfw`) keep their `_custom-<site>.scss` files in `theme/scss/` and will get their own `themes/<site>/` directories on future branches.
+The 11 deferred sub-sites get their own `themes/<site>/` directories on future branches. Those that already have on-disk partials keep them in `theme/scss/` until they're migrated; the rest start from scratch.
 
 **No per-theme `package.json` or `node_modules/`.** One install at `themes/` is shared across every theme via the build orchestrator. Adding a new theme means dropping a directory under `themes/` — no new Node setup.
 
@@ -268,7 +296,7 @@ Each of the current files under `src/plonetheme.lp/src/plonetheme/lp/theme/scss/
 | `theme/scss/_custom-western-landscapes.scss` | `themes/western-landscapes/scss/_custom.scss` |
 | `theme/scss/_custom-wildland-fire.scss` | `themes/wildland-fire/scss/_custom.scss` |
 
-Out of scope on this branch (deferred to future branches): `_custom.scss`, `_custom-aquatics.scss`, `_custom-bobscapes.scss`, `_custom-birdlocale.scss`, `_custom-eastern-deciduous.scss`, `_custom-grasslands.scss`, `_custom-literature-gateway.scss`, `_custom-wlfw.scss`. They stay in `theme/scss/`.
+Out of scope on this branch (deferred to future branches): the other 11 sub-sites in the roster. The existing on-disk partials `_custom.scss`, `_custom-aquatics.scss`, `_custom-birdlocale.scss`, `_custom-bobscapes.scss`, `_custom-eastern-deciduous.scss`, `_custom-grasslands.scss`, `_custom-literature-gateway.scss`, `_custom-wlfw.scss` stay in `theme/scss/`. The remaining deferred sub-sites (`lp-parent-site`, `ecosystem-risks-benefits`, `equity-inclusion`, `gis-planning`) have no existing partials yet — they'll be authored from scratch on their migration branch.
 
 Use `git mv` (not copy + delete) so history follows the files.
 
@@ -374,7 +402,7 @@ For each sub-site folder, repeat these steps:
 | `/Plone/western-landscapes` | `western-landscapes` |
 | `/Plone/wildland-fire` | `wildland-fire` |
 
-Folder paths assume LP sub-sites live at the portal root with slugs matching theme names. Adjust if the actual site structure differs. The other 7 LP sub-sites are out of scope on this branch — see Branch scope at the top.
+Folder paths assume LP sub-sites live at the portal root with slugs matching theme names. Adjust if the actual site structure differs. The other 11 LP sub-sites are out of scope on this branch — see Branch scope at the top.
 
 ### Troubleshooting
 
@@ -437,7 +465,7 @@ For each of `western-landscapes`, `wildland-fire`:
 - [ ] Smoke-test via Playwright against a child-site folder configured via the walkthrough.
 - [ ] Commit per theme so reviews are bounded.
 
-The other 7 LP sub-sites (`aquatics`, `birdlocale`, `bobscapes`, `eastern-deciduous`, `grasslands`, `literature-gateway`, `wlfw`) are **out of scope on this branch** — see Branch scope at the top.
+The other 11 LP sub-sites (batches 2–4 in the roster) are **out of scope on this branch** — see Branch scope at the top.
 
 ### Phase 4 — Portal default theme (`lp-base`)
 
@@ -449,13 +477,13 @@ The other 7 LP sub-sites (`aquatics`, `birdlocale`, `bobscapes`, `eastern-decidu
 
 ### Phase 5 — Cleanup
 
-The legacy `theme/` directory **stays in place on this branch** because the 7 deferred sub-sites still have their `_custom-<site>.scss` partials there, awaiting future migration. Cleanup is scoped to artifacts that are fully replaced.
+The legacy `theme/` directory **stays in place on this branch** because 7 of the 11 deferred sub-sites still have their `_custom-<site>.scss` partials there, awaiting future migration. Cleanup is scoped to artifacts that are fully replaced.
 
 - [ ] Remove the `<plone:static>` registration of `theme` (l-p-theme) from `configure.zcml` — it's no longer the source of any active theme.
 - [ ] Delete `theme/styles/` (compiled output for the legacy single-theme — no longer regenerated).
 - [ ] Remove the `theme/styles/` patterns from `.gitattributes`.
 - [ ] Delete `theme/manifest.cfg`, `theme/rules.xml`, `theme/index.html`, `theme/preview.png` (legacy single-theme chrome — superseded by per-theme copies under `themes/<site>/`).
-- [ ] Keep `theme/scss/_custom-<deferred>.scss` files for the 7 deferred sub-sites; they migrate on their own future branches.
+- [ ] Keep the existing `theme/scss/_custom-<deferred>.scss` files (the 7 deferred sites that already have partials on disk: `aquatics`, `birdlocale`, `bobscapes`, `eastern-deciduous`, `grasslands`, `literature-gateway`, `wlfw`); they migrate on their own future branches. The remaining 4 deferred sub-sites (`lp-parent-site`, `ecosystem-risks-benefits`, `equity-inclusion`, `gis-planning`) have no existing partials.
 - [ ] Keep `theme/theme_images/` for now since deferred SCSS partials still reference its paths; future branches that port a deferred site move the relevant assets into `themes/<site>/theme_images/`.
 - [ ] Update `CLAUDE.md` (parent repo):
   - Rewrite "Theme / Frontend" section: replace `cd src/plonetheme.lp/src/plonetheme/lp/theme/` with `cd src/plonetheme.lp/src/plonetheme/lp/themes/`. Update commands to reflect the orchestrator (`npm run watch`, `npm run watch:<site>`, `npm run build`).
@@ -501,7 +529,7 @@ Defer if the theming-control-panel UX is not a priority; the placeholder is harm
 
 ## Risks / things to watch
 
-- **`rules.xml` divergence over time.** Decision 3 (duplicate per theme) accepts that the 11 copies will drift. If a site-wide chrome change becomes necessary later (e.g., Plone toolbar handling), we'll be making the same edit 11 times. That's tolerated — the alternative is fighting Diazo includes.
+- **`rules.xml` divergence over time.** Decision 3 (duplicate per theme) accepts that the eventual 16 copies (15 sub-sites + `lp-base`) will drift. If a site-wide chrome change becomes necessary later (e.g., Plone toolbar handling), we'll be making the same edit 16 times. That's tolerated — the alternative is fighting Diazo includes. (Note: `lp-parent-site` is now in the roster as a replicated theme of `landscapepartnership.org` itself — verify whether `lp-base` is still needed as a separate neutral root theme, or whether `lp-parent-site` supersedes it. See decision 4.)
 - **`index.html` asset paths.** Currently references `styles/theme.min.css` relatively. Stays fine per-theme. Verify no absolute `/++theme++l-p-theme/` references sneak through.
 - **Compiled CSS duplication on disk.** Each theme bundles Bootstrap + Barceloneta (~150KB pre-gzip per theme). On this branch with 4 in-scope themes plus `lp-base`, that's ~750KB of compiled CSS on-disk and in-git. Per-request unchanged — visitor downloads one. Worth naming in commit messages to set expectations.
 - **TinyMCE templates path move.** If editors have customized templates under `theme/tinymce-templates/`, moving to `themes/_shared/tinymce-templates/` should be transparent (Plone resolves by name), but verify in Phase 2.

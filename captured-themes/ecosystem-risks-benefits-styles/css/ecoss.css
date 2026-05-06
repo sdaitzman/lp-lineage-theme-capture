@@ -1,0 +1,234 @@
+/* Custom CSS for Ecosystem Services (ecoss) */
+
+#portaltab-the-cooperative,
+#portaltab-research,
+#portaltab-projects,
+li#portaltab-home ul.submenu {
+    display: none! important;
+}
+
+
+li#portaltab-child-home ul.submenu {
+    display:none;
+}
+#portal-banner { display: none; }
+
+
+
+body {
+  background: url("ecoss-images/ecoss-bg.jpg") no-repeat center center fixed #173245!important;
+  -webkit-background-size: cover!important;
+  -moz-background-size: cover!important;
+  -o-background-size: cover!important;
+  background-size: cover!important;
+    font-size: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+
+#content {
+    font-size: 100%;
+    margin: 2em;
+}
+
+.lp-footer { display: none; }
+
+.nest-navigation-bar {
+    background: transparent none repeat scroll 0 0;
+    display: block;
+    height: 40px;
+    margin: 0 auto;
+    width: 1050px;
+}
+
+#portal-searchbox {
+    background: transparent url(black55.png) top left repeat;
+    border-radius: 6px;
+    border-right: medium none;
+    margin-top: -73px;
+    padding: 10px;
+    position: absolute;
+}
+
+#searchGadget {
+    width: 15em;
+}
+input.searchField {
+    -moz-appearance: none;
+    border: 1px solid #999;
+    border-radius: 4px;
+    padding: 8px 10px;
+}
+
+.searchSection {
+    color: #fff;
+    display: none;
+}
+
+.searchButton {
+   background: #EB801C url(magnifier.png) center center!important;
+    border: medium none;
+    border-radius: 3px;
+    color: #fff;
+    margin-left: 5px;
+    padding: 7px 3px;
+}
+
+.searchButton:hover {
+    background: tomato none repeat scroll 0 0;
+    color: #fff;
+
+}
+
+#partnerSiteSelection {
+    right: 0;
+    top: 75px;
+}
+
+#visual-portal-wrapper {
+    background-color: transparent;
+    box-shadow: 0 10px 20px rgba(50, 50, 50, 0.41);
+    margin: 0 auto;
+    max-width: 1000px;
+    min-height: calc(100vh - 190px);
+}
+
+#portal-header {
+    background: url("none") no-repeat scroll left 20px transparent;
+    border-color: transparent;
+    border-style: none;
+    width: 1000px;
+}
+
+
+#portal-logo {
+    display: block;
+    margin: 50px 0 30px;
+}
+
+#portal-top {
+    background:url("ecoss-images/portal-header-bg.png") repeat-x scroll 0 15px transparent !important;
+height: 240px;
+}
+
+
+#portal-columns {
+    background-color: #fff;
+    padding-top: 10px;
+}
+
+#portal-globalnav {
+    font-size: 100%;
+}
+
+
+
+#globalnav-wrapper {
+    background-color: #173145;
+    border-bottom: medium none;
+    border-top: medium none;
+    margin-bottom: 10px;
+    margin-top: 15px;
+   top: 127px;
+    width: 1000px;
+}
+
+#portal-globalnav {
+    background-color: #173145;
+    justify-content: left;
+}
+   
+
+#portal-globalnav li a {
+    background: none repeat scroll 0 0 #173145;
+    border-right: medium none;
+    font-size: 1.1em;
+    font-weight: normal;
+    min-width: 2.5em;
+    padding: 0.85em 1.1em;
+}
+
+#portal-globalnav li a:hover {
+    background: none repeat scroll 0 0 #69ABBB;
+    color:#173145!important;
+}
+
+#portal-globalnav .selected a {
+    background: url("none") repeat scroll 0 0 #5b9a9a;
+}
+
+/* --- Home Icon --- */
+
+#portaltab-home > a {
+    background: url(none)!important;
+    text-indent: 0;
+}
+
+#portaltab-home > a:hover {
+    background: #69ABBB url(none)!important;
+    text-indent: 0;
+}
+
+#portal-personaltools-wrapper {
+    right: 0;
+    top: 197px;
+}
+
+
+h1, h2, h3, h4 {
+    color: #205c90;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 600;
+    letter-spacing: -0.0115em;
+    line-height: 1.2em;
+    margin-bottom: 10px;
+}
+
+.intro {
+    color: #676767;
+    font-size: 1.3em;
+    font-weight: 300;
+    line-height: 1.4em;
+    margin: 1em 0;
+    -webkit-font-smoothing: antialiased;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
+}
+
+.image-inline, a .image-inline, a:visited .image-inline {
+    border: 1px solid #cccccc;
+    float: right;
+    margin-left: 1.5em;
+    margin-top: 0.75em;
+    padding: 0;
+}
+
+.captioned img {
+    border: medium none !important;
+}
+
+dd.image-caption {
+    color: #777;
+    font-size: 11pt;
+    line-height: 1.3em;
+    margin: 6px 15px 10px !important;
+    max-width: 92%;
+}
+
+.span6last {
+    float: right;
+    margin-right: 0;
+    width: 47.75%;
+}
+@media only screen and (max-width: 680px) {
+
+.span6last {
+    float: none;
+    margin-right: 0px;
+    width: 100%;
+}
+}
+
+#portal-footer-inner {
+    max-width: 1000px!important;
+}

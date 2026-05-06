@@ -1,8 +1,19 @@
 # BirdLocale Sub-site Style Guide
 
-**Source URL:** https://dev.landscapepartnership.org/networks/working-lands-for-wildlife/birdlocale
-**CSS file:** `birdlocale.css` (sub-site specific, 801 lines)
-**Crawl date:** 2026-03-18
+**Source URL:** https://landscapepartnership.org/networks/working-lands-for-wildlife/birdlocale
+**CSS file:** `birdlocale.css` (sub-site specific)
+**Crawl date:** 2026-05-04 (re-captured from production; supersedes 2026-03-18 dev capture)
+
+---
+
+## Capture notes
+
+- All HTML, CSS, images, and screenshots were re-captured from the **production** host (`landscapepartnership.org`). The original 2026-03-18 capture was sourced from `dev.landscapepartnership.org`; that source URL is replaced and the artifacts have been refreshed.
+- Pages 1-4 are the sub-site-unique pages (linked from BirdLocale's `#portal-globalnav`). Pages 5-7 are LP global utility views (`sitemap`, `accessibility-info`, `contact-info`) that are reachable via footer/header chrome under the BirdLocale path; they render with the BirdLocale theme so are captured for theme-replication reference.
+- Screenshots are full-page (`page.screenshot({ fullPage: true })`); each page was scrolled to the bottom and back to the top before capture to trigger lazy-loaded images.
+- Desktop captures use a 1280px viewport; mobile captures use a 375px viewport. Captured PNGs report widths of 1312/431px because Chromium's full-page screenshot includes a scrollbar reservation gutter — the page renders at the intended layout viewport.
+- "Landscape" in the global nav is an external link to the `grasslands-and-savannas` sub-site (a separate sub-site capture target) and is intentionally not captured here.
+- No pages were unreachable.
 
 ---
 
@@ -11,9 +22,12 @@
 | # | Page | URL Path | Description |
 |---|------|----------|-------------|
 | 1 | Home | `/networks/working-lands-for-wildlife/birdlocale` | Landing page with header banner, feature blocks, partner logos |
-| 2 | Technical Background | `.../birdlocale/background` | Text content about the project history, goals, and partnership |
+| 2 | Background | `.../birdlocale/background` | Text content about the project history, goals, and partnership |
 | 3 | How to Access the Web App | `.../birdlocale/how-to-access-the-web-app` | Login/access instructions for the BirdLocale web application |
 | 4 | Contributors | `.../birdlocale/birdlocale-contributors` | Partner logo grid with contributor organizations |
+| 5 | Sitemap | `.../birdlocale/sitemap` | Plone built-in sitemap; rendered with sub-site theme |
+| 6 | Accessibility info | `.../birdlocale/accessibility-info` | LP global accessibility statement under sub-site path |
+| 7 | Contact info | `.../birdlocale/contact-info` | LP global contact form under sub-site path |
 
 ---
 
@@ -457,6 +471,43 @@ Also loads Font Awesome 4.2.0 from MaxCDN.
 | `dateinput.css` | 2KB | Date picker |
 | `tinymce.css` | <1KB | TinyMCE editor |
 | `print.css` | 2KB | Print styles |
+
+---
+
+## Print Styles
+
+Print rules for this sub-site come exclusively from `print.css` (the Plone-wide default). No `@media print` blocks were found in `birdlocale.css` or `ploneCustom.css`.
+
+`print.css` provides these defaults:
+- `body` and headings switch to `"Helvetica Neue", Arial, FreeSans, sans-serif`.
+- Headings: bold, `line-height: 125%`, `page-break-inside/after: avoid`; `h1`/`h2` use `letter-spacing: -0.05em`.
+- Anchor links: `text-decoration: none`, `border-bottom: 0.1em solid gray`, `color: black`.
+- `#portal-column-content { width: 95% }` (single-column print).
+- `.documentDescription { font-weight: bold }`.
+- `pre`: `1pt dotted black` border, monospace `8pt`, with overflow + padding.
+- `table.listing` and its cells: `1pt solid black` collapsed borders, `6px` padding.
+- `div.pageBreak { page-break-before: always }`.
+
+There are no sub-site-specific print overrides — Phase 3.6 print work for BirdLocale should rely on the shared `_print.scss` base; no `birdlocale`-only print rules are required.
+
+## Captured Images Inventory
+
+Logos and chrome (used in header, footer, and partner grids on these pages):
+
+| File | Source path | Notes |
+|---|---|---|
+| `birdlocale-header.jpg` | `/networks/.../birdlocale-images/birdlocale-header.jpg` | Desktop header banner background (CSS `background-image`) |
+| `birdlocale-block.jpg` | `/networks/.../birdlocale-images/birdlocale-block.jpg` | Mobile (<=768px) header background |
+| `birdlocale-footer.jpg` | `/networks/.../birdlocale-images/birdlocale-footer.jpg` | Footer background image (`#birdlocale-footer`) |
+| `birdlocale-logo-rounded.png` | `/networks/.../birdlocale-images/birdlocale-logo-rounded.png` | BirdLocale rounded logo (`<img>` in chrome) |
+| `wlfw-logo-large.png`, `wlfw-logo.png`, `working-lands-logo.png` | `/networks/.../working-lands/...` | WLFW lockups used in footers and chrome |
+| `nrcs-white-lockup.svg`, `nrcs-transparent.png` | `/networks/.../nrcs-*` | NRCS lockup |
+| `lp-logo-white.svg`, `lp-logo-footer-white.svg` | `/networks/.../landscape-images/lp-logo-*` | LP parent-site logo (footer chrome) |
+| `fl-logo-white.svg`, `fergusonlynch-fl-white.png` | `/networks/.../FL-logo-*` | FergusonLynch site-credit logo |
+| `fergusonlynch-icon.png`, `fergusonlynch-icon-wlfw.png` | `/portal_css/fergusonlynch-icon.png`, `/networks/.../fergusonlynch-icon.png` | Site-credit icon (CSS background) |
+| `partner-georgia-logo.png` | `/networks/.../birdlocale-images/GEORGIA-logo-footer.png` | Georgia partner logo |
+| `contributor-martin-gamelabs.png`, `contributor-quail-forever.png`, `contributor-university-of-georgia.png`, `contributor-wlfw-logo.png` | `/networks/.../birdlocale/site-images/...` | Contributor-grid images (Plone scaled images) |
+| `blank.png` | `/networks/.../blank.png` | 1x1 spacer used as body bg |
 
 ---
 

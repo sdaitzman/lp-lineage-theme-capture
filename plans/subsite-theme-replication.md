@@ -4,6 +4,38 @@ Repeatable process for taking a Landscape Partnership sub-site URL and replicati
 
 ---
 
+## Sub-site roster
+
+The 15 LP sub-sites. When this plan refers to `SITE` as a placeholder, substitute the **Slug** column below. The **URL** column is the production source of truth for capture.
+
+| Full name | Slug | Batch | URL |
+|---|---|---|---|
+| The Anchor Approach to Connectivity | `anchor` | 1 | https://landscapepartnership.org/key-issues/anchor |
+| Western Landscapes | `western-landscapes` | 1 | https://landscapepartnership.org/networks/working-lands-for-wildlife/landscapes-wildlife/landscapes/western-landscapes |
+| Wildland Fire | `wildland-fire` | 1 | https://landscapepartnership.org/networks/working-lands-for-wildlife/wildland-fire |
+| SE FireMap | `se-firemap` | 1 | https://landscapepartnership.org/networks/working-lands-for-wildlife/wildland-fire/fire-mapping/regional-fire-mapping/se-firemap |
+| LandscapePartnership.Org | `lp-parent-site` | 2 | https://landscapepartnership.org/ |
+| Working Lands for Wildlife | `working-lands-for-wildlife` | 2 | https://landscapepartnership.org/networks/working-lands-for-wildlife |
+| Aquatics | `aquatics` | 2 | https://landscapepartnership.org/networks/working-lands-for-wildlife/landscapes-wildlife/landscapes/aquatics |
+| Eastern Deciduous Forests | `eastern-deciduous-forests` | 2 | https://landscapepartnership.org/networks/working-lands-for-wildlife/landscapes-wildlife/landscapes/eastern-deciduous-forests |
+| Grasslands and Savannas | `grasslands-and-savannas` | 2 | https://www.workinglandsforwildlife.org/landscapes-wildlife/landscapes/grasslands-and-savannas |
+| BirdLocale | `birdlocale` | 3 | https://landscapepartnership.org/networks/working-lands-for-wildlife/birdlocale |
+| Bobscapes | `bobscapes` | 3 | https://www.bobscapes.org/ |
+| The Literature Gateway | `the-literature-gateway` | 3 | https://landscapepartnership.org/networks/working-lands-for-wildlife/the-literature-gateway |
+| Ecosystem Benefits & Risks | `ecosystem-risks-benefits` | 4 | https://landscapepartnership.org/ecosystem-risks-benefits |
+| Equity & Inclusion | `equity-inclusion` | 4 | https://landscapepartnership.org/key-issues/equity-inclusion/ |
+| GIS & Conservation Planning Toolkit | `gis-planning` | 4 | https://landscapepartnership.org/maps-data/gis-planning |
+
+Most sub-sites live on `landscapepartnership.org`. Two are on different production hosts: `bobscapes` on `bobscapes.org`, `grasslands-and-savannas` on `workinglandsforwildlife.org`. The URL column is canonical for each — never use `dev.landscapepartnership.org` URLs for capture or reference.
+
+Slug conventions:
+- The slug is the canonical identifier — used as the directory name (`themes/<slug>/`), the SCSS partial name (`_custom-<slug>.scss` in pre-migration layout, or `_custom.scss` inside `themes/<slug>/scss/` post-migration), the captured-themes folder (`captured-themes/<slug>/`), and the Plone child-site folder slug.
+- A handful of older on-disk SCSS partials use shorter slugs that don't match the canonical roster (`_custom-wlfw.scss`, `_custom-eastern-deciduous.scss`, `_custom-grasslands.scss`, `_custom-literature-gateway.scss`). They get renamed to the canonical slug when migrated. Use the canonical slug when starting any new work.
+
+The companion plan `subsite-theme-per-site-diazo-migration.md` reuses this same roster to define which sub-sites are in scope for each migration branch.
+
+---
+
 ## Prerequisites
 
 ### Start the local Plone server
@@ -36,7 +68,7 @@ Before every commit in Phase 3 and Phase 4:
 
 1. **Reload** the local Plone site in Playwright (`http://localhost:8080/Plone`)
 2. **Screenshot** the affected section(s) at desktop width (1280px)
-3. **Compare** against the reference screenshot in `lp-lineage-theme-capture/captured-themes/SITE-styles/screenshots/`
+3. **Compare** against the reference screenshot in `lp-lineage-theme-capture/captured-themes/SITE/screenshots/`
 4. **Test interactions** — hover states, dropdowns, mobile toggler, etc.
 5. **Fix any discrepancies** found — iterate until the section visually matches
 6. **Only then commit** the changes
@@ -47,21 +79,28 @@ If the server is not running, start it with `./devbuild.sh` before proceeding. D
 
 ## Phase 1: Crawl & Capture
 
-**Input:** A sub-site URL, e.g. `https://landscapepartnership.org/SITE`
+**Input:** The sub-site's production URL from the roster's **URL** column above.
+
+> **Always capture from production. Never capture from `dev.landscapepartnership.org`.**
+>
+> The dev environment can drift from production in styling, content, and structure, and replicating from it produces a theme that doesn't match what users actually see. If a URL surfaces with a `dev.` prefix (in a captured page, a redirect, an inherited URL, or anything else), strip the `dev.` and re-resolve against the production host before capturing. If a sub-site only exists on dev, stop and confirm with the user before proceeding — that's a signal the work isn't ready for replication. Historical dev-sourced captures live under `captured-themes/_archive/` and **must not** be used as reference material; treat the corresponding production capture (or a fresh one) as canonical.
+>
+> Two sub-sites are hosted on production domains other than `landscapepartnership.org` — `bobscapes` on `bobscapes.org` and `grasslands-and-savannas` on `workinglandsforwildlife.org`. The roster's URL column is the canonical entry point for each.
 
 ### 1.1 Enumerate pages
 - Visit the sub-site root and map all navigable pages (follow nav links, sidebar links, footer links).
 - Record each URL in a table: `page name | URL path | notes`.
-- Aim for ~10 representative pages covering all layout variants (home, listing, detail, news, team, etc.).
+- **Capture every page reachable from the sub-site's navigation.** At an absolute minimum, every top-level nav item (and every entry in any visible sub-nav, sidebar, or footer link list) must be enumerated. "Representative sampling" is not acceptable — partial coverage hides layout variants that only appear on a single page (custom hero on a section landing, an embedded form on a contact page, a unique grid on a directory page, etc.). If a page is linked from the sub-site's chrome, it must be in the table.
+- For very large content trees (e.g. dozens of leaf detail pages under one listing), capture every layout variant rather than every leaf — but every distinct template/layout must be represented, and every top-level/section-level page must be captured individually.
 
 ### 1.2 Capture HTML
 - Use Playwright to save full-page HTML for each URL.
-- Save to `lp-lineage-theme-capture/captured-themes/SITE-styles/html/NN-slug.html` (zero-padded, e.g. `01-home.html`).
+- Save to `lp-lineage-theme-capture/captured-themes/SITE/html/NN-slug.html` (zero-padded, e.g. `01-home.html`).
 - Preserve all `<link>`, `<style>`, and inline style attributes.
 
 ### 1.3 Extract CSS
 - From the HTML `<head>`, collect all `<link rel="stylesheet">` and `@import` URLs.
-- Download each CSS file to `lp-lineage-theme-capture/captured-themes/SITE-styles/css/`.
+- Download each CSS file to `lp-lineage-theme-capture/captured-themes/SITE/css/`.
 - Key files to look for:
   - Site-wide base CSS (often `base.css` or similar)
   - Site-wide custom overrides (`ploneCustom.css`)
@@ -72,19 +111,28 @@ If the server is not running, start it with `./devbuild.sh` before proceeding. D
 
 ### 1.4 Capture images from the original site
 - Examine the header, footer, hero/banner, and top content area of the home page for images that are part of the site design (logos, banner photos, background images, partner logos, icons).
-- Download these images using Playwright or direct fetch and save to `lp-lineage-theme-capture/captured-themes/SITE-styles/images/`.
+- Download these images using Playwright or direct fetch and save to `lp-lineage-theme-capture/captured-themes/SITE/images/`.
 - Use descriptive filenames: `header-logo.png`, `hero-banner.jpg`, `footer-partner-logo.png`, etc.
 - Note which images are referenced via CSS (`background-image`) vs HTML (`<img>` tags) — this distinction matters for how they'll be integrated into the theme.
 - These images serve as reference material and may be needed as assets in the theme's `theme_images/` directory during Phase 3.
 
 ### 1.5 Capture screenshots
-- Use Playwright to take full-page screenshots of **every** captured URL at both widths:
-  - **Desktop (1280px):** save to `lp-lineage-theme-capture/captured-themes/SITE-styles/screenshots/NN-slug.png`
-  - **Mobile (375px):** save to `lp-lineage-theme-capture/captured-themes/SITE-styles/screenshots/NN-slug-mobile.png`
-- Mobile screenshots are not optional — they are required for every page, not just the home page. Mobile layout differences (collapsed navs, stacked columns, hidden elements, different font sizes) must be visible in the reference material for accurate replication.
+
+Two non-negotiables:
+
+1. **Every page from §1.1 gets a screenshot.** Coverage matches the page enumeration exactly — if it's in the table, it has a screenshot. At minimum that means every top-level nav item (and every sub-nav / sidebar / footer link page) is captured individually. No "representative" omissions.
+2. **Every screenshot is full-height** — the entire scrollable document, top of header through bottom of footer, in a single image. Viewport-only crops are not acceptable: footer styling, below-the-fold sections, mid-page content blocks, and breakpoint-specific layout shifts only show up in a full-page capture. In Playwright this means `page.screenshot({ fullPage: true })`; never call `screenshot()` without `fullPage: true` for capture material. Verify after capture by spot-checking image height vs. expected page height.
+
+Capture every enumerated URL at both widths:
+- **Desktop (1280px):** save to `lp-lineage-theme-capture/captured-themes/SITE/screenshots/NN-slug.png`
+- **Mobile (375px):** save to `lp-lineage-theme-capture/captured-themes/SITE/screenshots/NN-slug-mobile.png`
+
+Mobile screenshots are not optional — they are required for every page, not just the home page. Mobile layout differences (collapsed navs, stacked columns, hidden elements, different font sizes) must be visible in the reference material for accurate replication.
+
+Before screenshotting, scroll the page to the bottom once and back to the top to trigger any lazy-loaded images, sticky-element transitions, or in-view animations; otherwise the full-height capture can include placeholder/blank states that don't match what a real visitor sees.
 
 ### 1.6 Write STYLE-GUIDE.md
-- Create `lp-lineage-theme-capture/captured-themes/SITE-styles/STYLE-GUIDE.md` organized by feature:
+- Create `lp-lineage-theme-capture/captured-themes/SITE/STYLE-GUIDE.md` organized by feature:
   1. **Page inventory** — table of all captured pages with URLs
   2. **Color palette** — extract all CSS custom properties from the sub-site CSS; list hex values and usage
   3. **Typography** — font families (Google Fonts), heading styles, body text, special text treatments
@@ -103,7 +151,7 @@ Commit within the submodule first, then update the submodule reference in the pa
 
 ```bash
 cd lp-lineage-theme-capture
-git add captured-themes/SITE-styles/
+git add captured-themes/SITE/
 git commit -m "Capture SITE sub-site styles (HTML, CSS, images, screenshots, style guide)"
 cd ..
 git add lp-lineage-theme-capture
@@ -165,7 +213,7 @@ Use Playwright to load `http://localhost:8080/Plone` and extract the rendered HT
 2. **Top section / hero** — the first content area below the nav (banners, hero images, lead text)
 3. **Footer** — everything in `#portal-footer-wrapper`
 
-Save these HTML snippets to `lp-lineage-theme-capture/captured-themes/SITE-styles/html/local-header.html`, `local-top-section.html`, and `local-footer.html` for reference.
+Save these HTML snippets to `lp-lineage-theme-capture/captured-themes/SITE/html/local-header.html`, `local-top-section.html`, and `local-footer.html` for reference.
 
 ### 2.5.2 Compare markup against the captured reference
 
@@ -209,7 +257,7 @@ For each of the three regions, open the corresponding captured HTML from Phase 1
 - [flag missing images or content]
 
 ### Images to Transfer
-- [list all images from lp-lineage-theme-capture/captured-themes/SITE-styles/images/ that need to be
+- [list all images from lp-lineage-theme-capture/captured-themes/SITE/images/ that need to be
   copied to theme/theme_images/ with recommended filenames]
 
 ### Recommended Approach
@@ -223,7 +271,7 @@ For each of the three regions, open the corresponding captured HTML from Phase 1
 
 After the user has reviewed the audit, or the sleep has elapsed:
 
-1. Copy any images needed for the theme from `lp-lineage-theme-capture/captured-themes/SITE-styles/images/` to `theme/theme_images/`.
+1. Copy any images needed for the theme from `lp-lineage-theme-capture/captured-themes/SITE/images/` to `theme/theme_images/`.
 2. If images need to be added to `index.html` (e.g. a logo or decorative element), make those changes now.
 3. If images will be referenced from SCSS as `background-image`, note the paths for use in Phase 3.
 4. Commit image assets and any structural HTML changes separately from style changes:
@@ -413,7 +461,7 @@ Each commit should represent a coherent visual section or sub-section. Guideline
 
 ### 4.1 Full-page comparison
 - Use Playwright to capture full-page screenshots of the local site at each page equivalent at **both desktop (1280px) and mobile (375px)** widths.
-- Compare side-by-side with the corresponding reference screenshots in `lp-lineage-theme-capture/captured-themes/SITE-styles/screenshots/` (`NN-slug.png` for desktop, `NN-slug-mobile.png` for mobile).
+- Compare side-by-side with the corresponding reference screenshots in `lp-lineage-theme-capture/captured-themes/SITE/screenshots/` (`NN-slug.png` for desktop, `NN-slug-mobile.png` for mobile).
 - Note all remaining discrepancies at both widths.
 
 ### 4.2 Interaction testing
@@ -533,12 +581,12 @@ This recap ensures the user has a complete picture of what was achieved and what
 
 **Never clutter the `lp-lineage-theme-capture/captured-themes/` folder.** All files must be organized within neatly structured subfolders at the appropriate level.
 
-- **Reference screenshots** go in `lp-lineage-theme-capture/captured-themes/SITE-styles/screenshots/` (the per-page captures from Phase 1).
+- **Reference screenshots** go in `lp-lineage-theme-capture/captured-themes/SITE/screenshots/` (the per-page captures from Phase 1).
 - **Testing screenshots** (taken during development to verify against captured references) go in `tmp/screenshots/` (gitignored in the parent repo). These are ephemeral and never committed.
 - **Never place screenshots directly in `lp-lineage-theme-capture/captured-themes/`.** Always use the sub-site's subfolder hierarchy for captured reference material.
 
 ```
-lp-lineage-theme-capture/captured-themes/SITE-styles/
+lp-lineage-theme-capture/captured-themes/SITE/
 ├── STYLE-GUIDE.md
 ├── css/
 │   ├── base.css
@@ -594,6 +642,7 @@ Style replication sessions are often long, interrupted, and resumed later — so
 
 ## Notes
 
+- **Capture from production only.** Use `https://landscapepartnership.org/...`, never `https://dev.landscapepartnership.org/...`. If a URL ever surfaces with a `dev.` prefix during capture or replication, strip it and re-resolve against the production host. Historical dev-sourced captures under `captured-themes/_archive/` must not be used as reference material.
 - **Always start the Plone server** with `./devbuild.sh` before any visual testing. Docker Desktop must be running first.
 - Always use `npm run watch` (not `npm run build`) during development.
 - **Never commit CSS changes without visual verification** via Playwright screenshots against the reference design.
