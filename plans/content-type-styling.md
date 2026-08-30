@@ -21,6 +21,8 @@ The source of record is the live report at **`http://localhost:8080/Plone/conten
 
 When this plan refers to `TYPE`, substitute the **Portal type** column. When it refers to `SITE`, substitute a slug from the sub-site roster in `subsite-theme-replication.md`.
 
+**Scope note:** a `TYPE` run covers BOTH the individual object views above AND the container/listing displays that present instances of the type (e.g. `/resources/lp-products` for `product`) — see **Container & listing displays** below.
+
 ---
 
 ## Reference URLs: local ↔ live
@@ -76,6 +78,46 @@ imported from that theme's `theme.scss` **after** `custom`:
 ```
 
 Keep the same `body.portaltype-*` scoping and internal organization (one commented section per type) so overrides are findable.
+
+### Container & listing displays
+
+Styling a type is not done when its object view matches — the folders (and old
+Topics/Collections) that LIST instances of the type are part of the same run:
+
+1. **Enumerate** them while bucketing URLs in Phase 1: the parent paths of the type's
+   instances, plus any section landing pages that present the type. Record each in
+   `SAMPLE.md` as `folder | live layout | local layout | renders locally?`.
+2. **Identify the live layout** from the live page's `body.template-<name>` class.
+   These are mostly custom Plone-4 section templates in `6custom/` (verified live:
+   `/resources/lp-products` → `template-product_section`; wildland-fire
+   `research/products` → `template-contents_full`; `research` → `template-grid_layout`
+   on a `portaltype-topic`), NOT stock folder listings.
+3. **Layout plumbing** (one-time prerequisites, flagged during the product pilot —
+   these are `lp.content` changes, not theme changes, and need user sign-off):
+   - Plone 6 FTIs have `default_view_fallback` enabled: a folder whose `layout` names
+     a view method not registered in the FTI's `view_methods` silently falls back to
+     the default (`listing_view`). The custom section layouts must be added to the
+     Folder (and Topic/Collection) FTI `view_methods` via a GenericSetup `types/`
+     profile in `lp.content` before any folder can use them.
+   - Per-folder layout assignments were not migrated. Live-side
+     `lp_scripts/export_folder_layouts_json.py` exists; an `import_folder_layouts`
+     importer is still needed.
+   - Each `6custom` section template must be render-tested on Plone 6 before styling
+     (several Plone-4 templates are known-broken — cf. the `document_view.pt`
+     shadowing incident).
+4. **Style** listing displays with the same two-layer scheme, scoped under
+   `body.template-<section_template>` (NOT `portaltype-folder`, which is too broad).
+   Put the rules in the owning type's Layer 1 partial (e.g. `product_section` styles
+   in `_product.scss`); lift selectors shared by several section templates (e.g. the
+   `grid-container-*` family) into a `_listings.scss` partial when the second type
+   needs them.
+5. **Verify** listing pages exactly like object pages (CRITICAL section): full-page,
+   both widths, against the live folder URL — including the search/filter/sort
+   controls these section templates carry.
+
+Until the plumbing in (3) lands, listing displays render as stock `listing_view`
+locally — style object views, record the listing gap in `css-notes.md`, and leave the
+checklist's listing half unticked.
 
 ### Deduplication decision ladder
 
@@ -195,11 +237,11 @@ captured-themes/_content-types/<TYPE>/
 
 ## Status checklist
 
-Tick a cell only after Phase 5 verification for that type on that sub-site. `—` = sub-site has no instances of the type.
+Tick a cell only after Phase 5 verification for that type on that sub-site — **object views AND listing displays** (until the listing-layout plumbing lands, annotate ticks as object-views-only). `—` = sub-site has no instances of the type.
 
 | TYPE | Layer 1 done | anchor | aquatics | birdlocale | bobscapes | e-d-forests | eco-risks | equity | gis-planning | lp-parent | se-firemap | lit-gateway | western | wildland-fire | wlfw | grasslands |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| product | ☑ 2026-08-30 | — | — | — | — | — | — | — | — | ✓ | ✓ | — | — | ✓ | — | — |
+| product | ☑ 2026-08-30 (object views only; listings blocked on layout plumbing) | — | — | — | — | — | — | — | — | ✓ | ✓ | — | — | ✓ | — | — |
 | project | ☐ | | | | | | | | | | | | | | | |
 | spatial_data | ☐ | | | | | | | | | | | | | | | |
 | organization | ☐ | | | | | | | | | | | | | | | |

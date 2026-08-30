@@ -48,6 +48,20 @@ None.
 3. **PROJECT PAGE: block** (`.product-box`): renders on live; locally empty/absent
    because the `projNALCC` relation didn't survive import. Content issue, not CSS.
 
+## Listing displays (blocked on layout plumbing, 2026-08-30)
+
+| Folder | Live layout | Local |
+|---|---|---|
+| `/resources/lp-products` | `template-product_section` (6custom search/filter/sort UI + `grid-container-5col`) | falls back to `listing_view` |
+| `.../wildland-fire/resources/research/products` | `template-contents_full` | falls back |
+| `.../wildland-fire/resources/research` | `template-grid_layout` (`portaltype-topic`) | falls back |
+
+Local folders can't use these layouts yet: `default_view_fallback` reverts any layout
+not in the FTI `view_methods` (verified by PATCHing `layout=product_section` on
+lp-products — render stayed `listing_view`), and per-folder layouts were never
+imported. See the plan's **Container & listing displays** for the prerequisite
+`lp.content` work. Listing styling for product is therefore NOT yet implemented.
+
 ## Verification (Phase 5, 2026-08-30)
 
 Side-by-side full-page compare local↔live at desktop + 390: `natures-network`,
