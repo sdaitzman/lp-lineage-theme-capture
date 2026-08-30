@@ -12,11 +12,11 @@ The source of record is the live report at **`http://localhost:8080/Plone/conten
 
 | Portal type | Count | Default view | Rendered by | Importer |
 |---|---|---|---|---|
-| `product` | 50 | `product_view` | `lp.content` skin `6custom/product_view.pt` | `scripts/import_products.sh` |
+| `product` | 50 | `product_view` | `lp.content` skin-layer template `6custom/product_view.pt` | `scripts/import_products.sh` |
 | `project` | 192 | `project_view` | `6custom/project_view.pt` | `scripts/import_projects.sh` |
 | `spatial_data` | 100 | `spatial_view` | `6custom/spatial_view.pt` | `scripts/import_spatial_data.sh` |
 | `organization` | 668 | `organization_view` | `6custom/organization_view.pt` | `scripts/import_orgs.sh` |
-| `person` | 3129 | `person_view` | `6custom/person_view.pt` + `zen_person` layer | `scripts/import_people.sh` |
+| `person` | 3129 | `person_view` | `6custom/person_view.pt` (the `zen_person` skin layer adds related person templates) | `scripts/import_people.sh` |
 | `google_doc` | 45 | `gdoc_view` | browser view `lp.content/browser/templates/gdoc_view.pt` | `scripts/import_googledocs.sh` |
 
 When this plan refers to `TYPE`, substitute the **Portal type** column. When it refers to `SITE`, substitute a slug from the sub-site roster in `subsite-theme-replication.md`.
@@ -55,7 +55,7 @@ themes/_shared/scss/content-types/
 `_shared/scss/_base.scss` imports `content-types/index` **after** the existing shared partials and — because every theme's `theme.scss` does `@import "../../_shared/scss/base"` before `@import "custom"` — the shared type styles automatically reach ALL 15 themes and are overridable per theme without `!important`.
 
 Rules for Layer 1:
-- Scope every rule under the type's body class, e.g. `body.portaltype-product { … }` (verify the exact normalized class on a live local page before first use — Plone lowercases and may hyphenate, e.g. `portaltype-spatial_data` vs `portaltype-spatial-data`; also available: `body.template-<view>` e.g. `template-product_view`).
+- Scope every rule under the type's body class, e.g. `body.portaltype-product { … }` (verify the exact normalized class on a live local page before first use — Plone lowercases and hyphenates spaces but keeps underscores, e.g. `portaltype-spatial_data`, not `portaltype-spatial-data`; also available: `body.template-<view>` e.g. `template-product_view`).
 - Express all colors, fonts, and spacing through the existing CSS custom properties (`--variable-name`) defined by each theme. Most cross-sub-site variation (brand color, fonts) is then automatic with zero per-theme code.
 - Structural/layout rules (grids, image placement, metadata blocks, download buttons) go here — they are the same everywhere on the live site.
 
