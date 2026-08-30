@@ -97,6 +97,21 @@ Before writing any rule, walk down:
 
 ---
 
+## CRITICAL: Visual comparison before every commit
+
+**Never commit content-type styles without a side-by-side comparison of the local page against its live counterpart.** (Same rule as `subsite-theme-replication.md`, adapted to content-type pages.)
+
+For every sampled page, before committing:
+
+1. **Full-page screenshots only** — `page.screenshot({ fullPage: true })`, never a bare viewport capture. Keyword tables, contact fields, and below-the-fold content are exactly what this plan styles, and they are cut off in viewport shots. Scroll to the bottom and back to the top first to trigger lazy-loaded images.
+2. **Both widths** — desktop 1440 and mobile 390. Local content is mostly private, so verification happens logged in: capture local desktop at a **1660 viewport** so the 220px admin toolbar doesn't shrink the content area below its live 1440 equivalent.
+3. **Compare the content area** element by element against the live reference: grid/column layout, spacing, heading sizes and weights, text color, table chrome, image sizing, list rendering. Chrome (header/nav/hero/footer) belongs to `subsite-theme-replication.md` — note chrome deltas, don't chase them here.
+4. **Spot-check computed styles** with `playwright-cli eval` on both live and local — at minimum `fontSize`, `fontWeight`, `color`, `lineHeight` of the type's key elements (field headings, table cells, lede). Record measured live values in `css-notes.md`; don't eyeball font sizes from screenshots.
+5. **Test interactive states** the type's CSS defines (e.g. `table.simple` row hover) and the responsive collapse at ≤768px.
+6. **Iterate until it matches; only then commit.** Local dev screenshots go to `tmp/screenshots/` (gitignored) with contextual names; only live reference captures are committed to this submodule.
+
+---
+
 ## Scope selection — every run takes a subset
 
 A run is defined by **TYPES × SITES**:
@@ -117,11 +132,11 @@ Track progress in the checklist at the bottom of this file (one row per type; ti
 
 ### Phase 1: Sample & capture
 
-1.1. Fetch `http://localhost:8080/Plone/content_review_links`; extract the URLs for `TYPE`.
+1.1. Fetch `http://localhost:8080/Plone/content_review_links` for the per-type counts — but note it truncates to ~10 URLs per type. Get the **full** URL list from the catalog: `GET /Plone/@search?portal_type=<TYPE>&b_size=<count>` (admin:admin, `Accept: application/json`).
 
-1.2. Bucket the URLs by sub-site (path-prefix match against the roster). Pick a sample: 2–3 pages per sub-site that has instances of `TYPE`, preferring pages with rich field usage (images, downloads, long metadata). Record the sample list — local and mapped live URL side by side — in the capture folder (1.4).
+1.2. Bucket the URLs by sub-site (path-prefix match against the roster). Pick a sample: 2–3 pages per sub-site that has instances of `TYPE`, preferring pages with rich field usage (images, downloads, long metadata). **Verify each candidate's live counterpart is publicly reachable** — much of the live content is private and redirects to `require_login`; curl the live URL with `-L` and check the final URL before committing to a sample. Record the sample list — local and mapped live URL side by side, plus rejected private candidates — in `SAMPLE.md` (1.4).
 
-1.3. For each sampled page, screenshot the **live** counterpart on `https://dev.landscapepartnership.org/` at desktop (1440) and mobile (390) widths.
+1.3. For each sampled page, capture the **live** counterpart on `https://dev.landscapepartnership.org/` at desktop (1440) and mobile (390) widths — **full-page** captures per the CRITICAL section above, named `<slug>-live-<width>.png`.
 
 1.4. Store captures in this submodule under:
 
@@ -138,9 +153,15 @@ captured-themes/_content-types/<TYPE>/
 
 ### Phase 2: Analyze — common vs. divergent
 
-2.1. Diff the live screenshots (and live-page CSS via devtools/curl where needed) across sub-sites: list what is identical, what differs only by brand token, and what is structurally different.
+2.1. Extract the live CSS rules for the type's view. Fetch the live page's stylesheets (`ploneCustom.css` carries most custom rules; `base-*.css` the Plone 4 defaults) and pull every rule matching the view template's selectors — including the `@media` blocks around them. Where a value isn't in a stylesheet rule (inherited/computed), measure it with `playwright-cli eval` `getComputedStyle` on the live page.
 
-2.2. Write the findings to `css-notes.md` as three sections: **Shared**, **Token-varying**, **Site-specific (SITE: …)**. This document is the contract for Phases 3–4.
+2.2. **Markup parity audit** (the content-type analog of the replication plan's structural audit): the `6custom/*.pt` templates were rewritten during the Plone 6 migration, so local markup will NOT match live 1:1. Compare the live page's content-area HTML against the local page's, region by region (curl both; the local page needs admin auth). For each divergence record: what live emits, what local emits, and the remedy — reproduce live's look in CSS, accept the local improvement with normalized styling, or **flag an `lp.content` template change to the user** (template edits are outside theme scope and need sign-off). Missing content (broken relations, unimported fields) is an import issue — flag it, don't style around it.
+
+2.3. Diff the live rendering across sub-sites that have instances: list what is identical, what differs only by brand token, and what is structurally different. (Live serves one site-wide `ploneCustom.css`, so expect most types to be fully identical across sub-sites — verify rather than assume.)
+
+2.4. Write the findings to `css-notes.md` with these sections: **Shared**, **Token-varying**, **Site-specific (SITE: …)**, **Markup divergences (local vs live)**, and a **Verification** log (filled in during Phase 5, including measured computed-style values). This document is the contract for Phases 3–5.
+
+2.5. While analyzing, systematically walk the style categories so nothing is missed (condensed from the replication plan §3.3): box model & layout (grids, widths, margins); color & background; typography (family/weight/size/line-height — computed, not guessed); content text elements the type's fields emit (paragraphs, `ul`/`ol`, `dl`, tables, image captions, labels); borders & decoration (radius, shadows); interactive states (`:hover`, `:focus`, transitions); responsive behavior (which breakpoints, what changes); print behavior (does the type need anything beyond the shared LP print tier?).
 
 ### Phase 3: Implement Layer 1
 
@@ -148,7 +169,9 @@ captured-themes/_content-types/<TYPE>/
 
 3.2. Ensure each theme defines the custom properties the partial consumes (add missing ones to that theme's `_custom.scss` `:root` with the live site's values).
 
-3.3. Verify compilation across ALL themes (`npm run build` once at the end of the phase, or watch output for each), not just the one you're looking at — a Layer 1 change ships to every sub-site.
+3.3. Verify compilation across ALL themes, not just the one you're looking at — a Layer 1 change ships to every sub-site. Confirm the selector actually landed: `grep -l "portaltype-<type>" themes/*/styles/theme.min.css | wc -l` should equal 15.
+
+> **Watcher gotcha:** `npm run watch` does NOT react to edits under `_shared/scss/` (dart-sass's watch list misses it in this setup, even though the import graph includes it). After any Layer 1 edit, force recompiles with `touch */scss/theme.scss` from the `themes/` directory — the watch picks those up and recompiles + re-minifies everything within a few seconds. Also beware stale watcher processes from earlier sessions (`ps aux | grep "sass --watch"`); kill duplicates.
 
 ### Phase 4: Implement Layer 2
 
@@ -158,13 +181,15 @@ captured-themes/_content-types/<TYPE>/
 
 ### Phase 5: Verify & commit
 
-5.1. With Playwright, open each sampled local page and compare against the live reference screenshot: layout, spacing, typography, colors, hover/active states, mobile width. Dev screenshots go to `tmp/screenshots/` with contextual names (never into the submodule or project root).
+5.1. Run the full **CRITICAL: Visual comparison** cycle (above) for every sampled page: log in (admin/admin), full-page screenshots at 1660 (≈1440 content) and 390 into `tmp/screenshots/` as `product-<slug>-local-<width>-full.png`-style names, side-by-side against the live reference, computed-style spot checks, interactive states, mobile collapse. Iterate on the SCSS until each page matches.
 
-5.2. Fix regressions on OTHER types/sub-sites: spot-check one page of each previously-completed type on two sub-sites after any Layer 1 change.
+5.2. Record the outcome in `css-notes.md` → **Verification**: which pages/sub-sites were compared, the measured computed values, and every remaining delta with its classification (import gap, template divergence flagged to user, chrome item owned by the replication plan).
 
-5.3. Commit theme-repo changes as one commit per TYPE (or per TYPE × SITE for subset runs): `style <TYPE> pages: shared base + <SITE> overrides`. Commit submodule updates (screenshots, notes) inside the submodule first, then the pointer bump in the parent repo.
+5.3. Fix regressions on OTHER types/sub-sites: spot-check one page of each previously-completed type on two sub-sites after any Layer 1 change.
 
-5.4. Update the checklist below.
+5.4. Commit theme-repo changes as one commit per TYPE (or per TYPE × SITE for subset runs): `style <TYPE> pages: shared base + <SITE> overrides`. Commit submodule updates (screenshots, notes) inside the submodule first, then the pointer bump in the parent repo.
+
+5.5. Update the checklist below.
 
 ---
 
@@ -174,7 +199,7 @@ Tick a cell only after Phase 5 verification for that type on that sub-site. `—
 
 | TYPE | Layer 1 done | anchor | aquatics | birdlocale | bobscapes | e-d-forests | eco-risks | equity | gis-planning | lp-parent | se-firemap | lit-gateway | western | wildland-fire | wlfw | grasslands |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| product | ☐ | | | | | | | | | | | | | | | |
+| product | ☑ 2026-08-30 | — | — | — | — | — | — | — | — | ✓ | ✓ | — | — | ✓ | — | — |
 | project | ☐ | | | | | | | | | | | | | | | |
 | spatial_data | ☐ | | | | | | | | | | | | | | | |
 | organization | ☐ | | | | | | | | | | | | | | | |
