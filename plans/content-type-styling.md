@@ -8,7 +8,7 @@ Companion plans: `subsite-theme-replication.md` (site chrome: header/footer/nav/
 
 ## Content-type roster
 
-The source of record is the live report at **`http://localhost:8080/Plone/content_review_links`** (plain text: one section per portal type with the current instance count and page URLs). Re-fetch it at the start of every run — counts and URLs change as importers run. Counts below were captured 2026-08-30.
+The source of record is the live report at **`http://localhost:8080/Plone/getContentStats`** (plain text: one section per portal type with the current instance count and sample page URLs, including stock Plone types, plus a TOTAL; it supersedes the older `content_review_links`, which still exists). Re-fetch it at the start of every run — counts and URLs change as importers run. Like its predecessor it truncates the URL list per type, so get full lists from `@search`. Counts below were captured 2026-08-31 (`getContentStats` TOTAL: 9514; stock types — Document 554, Folder 1251, Image 1295, File 1121, Link 634, Collection 356, Event 72, News Item 10 — are Barceloneta/theme scope, not this plan's; `video` is absent because the importer still creates nothing — known blocked issue).
 
 | Portal type | Count | Default view | Rendered by | Importer |
 |---|---|---|---|---|
@@ -17,7 +17,8 @@ The source of record is the live report at **`http://localhost:8080/Plone/conten
 | `spatial_data` | 100 | `spatial_view` | `6custom/spatial_view.pt` | `scripts/import_spatial_data.sh` |
 | `organization` | 668 | `organization_view` | `6custom/organization_view.pt` | `scripts/import_orgs.sh` |
 | `person` | 3129 | `person_view` | `6custom/person_view.pt` (the `zen_person` skin layer adds related person templates) | `scripts/import_people.sh` |
-| `google_doc` | 45 | `gdoc_view` | browser view `lp.content/browser/templates/gdoc_view.pt` | `scripts/import_googledocs.sh` |
+| `google_doc` | 45 | `gdoc_view` | browser view `lp.content/browser/gdoc_view.pt` — a bare frameset; **N/A for styling** (see `captured-themes/_content-types/google_doc/css-notes.md`) | `scripts/import_googledocs.sh` |
+| `story` | 36 | `story_view` | browser view `lp.content/browser/story_view.pt` (the old `6custom/story_view.pt` was deleted in `cd81771`) | `scripts/import_stories.sh` |
 
 When this plan refers to `TYPE`, substitute the **Portal type** column. When it refers to `SITE`, substitute a slug from the sub-site roster in `subsite-theme-replication.md`.
 
@@ -170,6 +171,34 @@ Track progress in the checklist at the bottom of this file (one row per type; ti
 
 ---
 
+## Subagent execution model
+
+Multi-type runs parallelize across subagents, with one **integrator** session owning
+everything shared. The split that avoids coordination failures:
+
+- **One subagent per type (or small type pair)**, owning a DISJOINT file set: its
+  `_<type>.scss` partial and its `captured-themes/_content-types/<type>/{SAMPLE.md,css-notes.md}`.
+  Nothing else — and never shared files.
+- Subagent prompts carry the extracted live CSS rules, the template path, the body-class
+  scope, and the sample URLs, so agents don't re-derive (or invent) facts. Agents do NOT
+  run the watcher/npm, git, docker, or browsers, and do NOT edit `_index.scss`,
+  `_base.scss`, `_detail-layout.scss`, or this plan.
+- The **integrator** owns: cross-type shared partials (`_detail-layout.scss`), the
+  `_index.scss` import wiring, compiles, all Phase 5 visual verification, screenshots,
+  the plan/checklist, and every commit.
+
+**Validating subagent output (mandatory before compile):** read each returned partial
+in full and check (a) every rule traces to the extracted live CSS or a clearly-commented
+approximation; (b) scoping is exactly `body.portaltype-<type>`; (c) no shared-file edits
+slipped in (`git status` the shared paths); (d) no `!important` beyond documented live
+parity; (e) docs sections present. Fix small issues directly; send the agent back only
+for structural problems. Then wire imports, compile all 15 themes, and run Phase 5
+yourself — subagent-authored CSS gets the same visual verification as hand-written CSS,
+and mistakes found there are corrected by the integrator (screenshots don't lie;
+notes might).
+
+---
+
 ## Pipeline (per TYPE)
 
 ### Phase 1: Sample & capture
@@ -242,8 +271,9 @@ Tick a cell only after Phase 5 verification for that type on that sub-site — *
 | TYPE | Layer 1 done | anchor | aquatics | birdlocale | bobscapes | e-d-forests | eco-risks | equity | gis-planning | lp-parent | se-firemap | lit-gateway | western | wildland-fire | wlfw | grasslands |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | product | ☑ 2026-08-30 (object views only; listings blocked on layout plumbing) | — | — | — | — | — | — | — | — | ✓ | ✓ | — | — | ✓ | — | — |
-| project | ☐ | | | | | | | | | | | | | | | |
-| spatial_data | ☐ | | | | | | | | | | | | | | | |
-| organization | ☐ | | | | | | | | | | | | | | | |
-| person | ☐ | | | | | | | | | | | | | | | |
-| google_doc | ☐ | | | | | | | | | | | | | | | |
+| project | ☑ 2026-08-31 (object views only; via _detail-layout) | — | — | — | — | — | — | — | — | | | — | — | ✓ | — | — |
+| spatial_data | ☑ 2026-08-31 (object views only) | — | — | — | — | — | — | — | ✓ | | — | — | — | — | — | — |
+| organization | ☑ 2026-08-31 (object views only) | — | — | — | — | — | — | — | — | ✓ | — | — | — | — | — | — |
+| person | ☑ 2026-08-31 (object views only; live visual ref pending — see css-notes) | — | — | — | — | — | — | — | — | ✓ | — | — | — | — | — | — |
+| google_doc | N/A (frameset view — nothing to style) | | | | | | | | | | | | | | | |
+| story | ☑ 2026-08-31 (object views only) | — | ✓ | — | — | — | — | — | — | | — | — | — | — | — | — |
