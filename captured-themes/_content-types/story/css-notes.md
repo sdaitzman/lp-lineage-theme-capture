@@ -28,6 +28,9 @@ Implemented in `themes/_shared/scss/content-types/_story.scss`, scoped under
 | `.template-story_view .sidebar > nav` | background #fff; border-radius 5px; margin-left 1.5em; padding 0 10px 10px; box-shadow 4px 2px 7px 0 rgba(74, 74, 74, 0.2); border 1px solid #eee — rescoped under `body.portaltype-story .sidebar > nav` |
 | `.sidebar h4` | font-weight 600; margin-top 1em; margin-bottom 5px; font-size 16px; text-transform uppercase — rescoped under the body scope |
 | `.meta` | font-style italic — the template renders the byline/dateline (publication date) in `p.meta` as an italic meta line |
+| `.story-image img` | **added 2026-09-03** — live computed (grasslands): background #fff; border 1px solid #ccc; padding 4px (the framed hero look; the inline block only sizes the img) |
+| `.story-content-area` (≥769px) | **added 2026-09-03** — live computed top -120px on aquatics AND grasslands; the template's inline block says -140px, so ploneCustom.css overrides it. Body-scoped to win on specificity, and wrapped in a min-width query so the inline block's mobile `top: 0` stands |
+| `.link-category` | **added 2026-09-03** — font-size 12px (live computed). Everything else about the threat chips — #ddd pill, .25em/.5em padding, .5em radius, .25em margin — already comes from the template's inline `.group a.link-category` rule and computes to live's 3px 6px / 3px at 12px |
 
 White card: no "approximated from screenshot" rule was needed — the card on the
 live aquatics story page corresponds to `.story-content-area`, which IS styled,
@@ -64,7 +67,41 @@ Not enumerated in this pass; blocked on the same layout plumbing recorded in
 
 ## Verification
 
-Pending — integrator runs Phase 5.
+### Verification update (2026-09-03) — grasslands-and-savannas
+
+Phase 5 by integrator on grazing-study and woody-encroachment, local 1660 admin vs
+dev 1440, plus 390 both sides. Computed-style spot checks: h1 Merriweather 44.8/600
+brand-blue, `.description` Merriweather 20.8/#545454, card #fff + 0 6px 14px shadow +
+30px/50px padding + 940px max, sidebar nav card #fff/#eee/shadow — all identical live
+vs local. Deltas found and fixed in Layer 1: hero frame, card offset -120px, chip font
+size (table above).
+
+**Blocking content/template issue (lp.content, needs sign-off) — hero image 404 on
+EVERY story:** `story_view.pt` requests `@@images/imageHome/wide`, but `wide` is not
+in this site's `plone.allowed_sizes` (huge/great/larger/large/teaser/preview/mini/…).
+The `<img>` 404s, `.story-image` collapses to its padding, and the card's negative
+offset pulls it up over the byline/publisher line. This also affects the aquatics
+sample verified on 2026-08-31 — that pass's "full-bleed .story-image verified"
+note was wrong; the image was already 404 there. Remedy options: register a `wide`
+scale in `plone.allowed_sizes` via an lp.content `registry.xml` (live's width is
+1280 — the img computes to 1280px content width), or change the template to an
+existing scale. The frame/offset rules were verified by swapping the img `src` to
+`/imageHome/huge` in the browser (`tmp/screenshots/story-grazing-study-after-hugepreview-*.png`):
+framed hero + card overlap then match live.
+
+Other remaining deltas, classified:
+- **Import gaps:** `themes`, `threats`, `subjects` are empty on the grasslands
+  stories, so the sidebar Landscapes/Species card renders as an empty `<nav>`, no
+  threat chips, and no "Filed under" row. Body images reference
+  `resolveuid/<uid>` targets that do not exist locally (broken image icons).
+- **Chrome (replication plan):** `#content` carries 32px horizontal padding at
+  390 (Barceloneta) that live does not, and the parent-site/grasslands navigation
+  portlet column narrows the story column at desktop; both shrink the card vs live.
+- **Verification artifact:** logged-in captures at 390 include the 60px collapsed
+  toolbar, which also offsets the 100vw `.story-image` breakout by 30px (scrollWidth
+  420). Anonymous local access is not possible (private parents → `require_login`).
+- Regression spot-check after the Layer 1 change: aquatics resource-compass unchanged
+  apart from the (intended) frame/offset.
 
 ### Verification update (2026-08-31)
 story-resource-compass (aquatics): white content card (template inline styles) + Layer 1 italic meta, sidebar nav card, full-bleed .story-image verified vs live at 1440. Template clamp() bug still flagged for lp.content sign-off.

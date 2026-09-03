@@ -276,4 +276,4 @@ Tick a cell only after Phase 5 verification for that type on that sub-site — *
 | organization | ☑ 2026-08-31 (object views only) | — | — | — | — | — | — | — | — | ✓ | — | — | — | — | — | — |
 | person | ☑ 2026-08-31 (object views only; live visual ref pending — see css-notes) | — | — | — | — | — | — | — | — | ✓ | — | — | — | — | — | — |
 | google_doc | N/A (frameset view — nothing to style) | | | | | | | | | | | | | | | |
-| story | ☑ 2026-08-31 (object views only) | — | ✓ | — | — | — | — | — | — | | — | — | — | — | — | — |
+| story | ☑ 2026-09-03 (object views only; hero blocked on missing `wide` image scale — see css-notes) | — | ✓ | — | — | — | — | — | — | — | — | — | — | | | ✓ |
