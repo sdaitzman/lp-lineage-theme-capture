@@ -15,8 +15,10 @@ Implemented in `themes/_shared/scss/content-types/_spatial-data.scss`, scoped un
 
 | Selector | Measured live computed style |
 |---|---|
-| `.spatialDetails` | full-width div; font-size 12.16px = 0.76em at 16px root; line-height 1.3em; no floats |
-| `.spatialDetails` tables (`table.green` / `table.blue`) | no borders, no backgrounds — plain small print. Locally, Barceloneta table chrome must be neutralized (transparent backgrounds, border 0, compact 2px 8px padding) to match |
+| `.spatialDetails` | full-width div; **0.8em of the body size, line-height 1.5, color #000** (re-measured 2026-09-03 on parent 16px body → 12.8/19.2px, se-firemap → 12.8/19.2px, gis-planning 15.2px body → 12.16/18.24px; the 2026-08-31 "0.76em" was gis-planning's smaller body font, not a smaller ratio); no floats |
+| `.spatialDetails` tables (`table.green` / `table.blue`) | no borders, no backgrounds — plain small print. Locally, Barceloneta table chrome must be neutralized (transparent backgrounds, border 0). Live cells have **0 padding**, which runs label and value together ("Publication Date2025"); local keeps 2px 8px as a deliberate, documented legibility deviation |
+| `p.documentDescription` (lede) | Montserrat 1.08em / 500 / #666 / lh 1.5 (17.28px on parent & se-firemap, 16.4px on gis-planning) — same site-wide lede rule as project; lives in `_detail-layout.scss` scoped to product/project/spatial_data (added 2026-09-03) |
+| `.imgleft img` | live emits the Plone-4 `image_preview` scale = 400×400 box (309×400 for these portrait maps); the Plone 6 template emits `@@images/image/preview` = 400px wide, unbounded height (400×517). `max-height: 400px; width: auto` reproduces live (added 2026-09-03) |
 | `.mute-label` td | color #000; font-weight 400; 12.16px — plain text, no emphasis |
 | image (`.imgleft` wrapper) | NOT floated on live despite the class name — no float rule shipped |
 | `.visualClear` | clear both (Plone-4 helper emitted by the template) |
@@ -50,7 +52,19 @@ implemented.
 
 ## Verification
 
-Pending — integrator runs Phase 5.
+### Verification update (2026-09-03) — se-firemap + lp-parent-site
+
+Phase 5 by integrator on burned-area-rasters-2025 and fire-history-metrics-2024
+(se-firemap) and forest-change-loss and probability-of-development (lp-parent),
+local 1660 admin vs dev 1440, plus 390. Before: lede plain body text (se-firemap's
+theme even rendered it in Merriweather), `.spatialDetails` 12.16px/1.3 in #444,
+preview image 400×517. After: every measured value equals live — lede
+Montserrat 17.28/500/#666, details 12.8/19.2/#000, th #000, image 309×400.
+Regression spot-check: gis-planning applcc-boundary now 12.16/18.24 (= live's
+ratio on its 15.2px body) with the Montserrat lede live also shows; unchanged
+otherwise. Remaining deltas: "Metadata XML" link absent locally on the parent-site
+pages (import gap — field not populated); link colour and h1 top margin are theme
+chrome; the navigation portlet column is chrome (stacks below content at 390).
 
 ### Verification update (2026-08-31)
 spatial-applcc-boundary (gis-planning): .spatialDetails small-print label/value rows render borderless and compact, matching live; image un-floated as measured. No further deltas.

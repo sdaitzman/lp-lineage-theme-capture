@@ -272,7 +272,7 @@ Tick a cell only after Phase 5 verification for that type on that sub-site — *
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | product | ☑ 2026-08-30 (object views only; listings blocked on layout plumbing) | — | — | — | — | — | — | — | — | ✓ | ✓ | — | — | ✓ | — | — |
 | project | ☑ 2026-09-03 (object views only; via _detail-layout — lede, labels, captioned-image floats added on the parent-site run) | — | — | — | — | — | — | — | — | ✓ | — | — | — | ✓ | — | — |
-| spatial_data | ☑ 2026-08-31 (object views only) | — | — | — | — | — | — | — | ✓ | | — | — | — | — | — | — |
+| spatial_data | ☑ 2026-09-03 (object views only; lede + image-box + 0.8em details fixed on the se-firemap/parent run) | — | — | — | — | — | — | — | ✓ | ✓ | ✓ | — | — | — | — | — |
 | organization | ☑ 2026-08-31 (object views only) | — | — | — | — | — | — | — | — | ✓ | — | — | — | — | — | — |
 | person | ☑ 2026-08-31 (object views only; live visual ref pending — see css-notes) | — | — | — | — | — | — | — | — | ✓ | — | — | — | — | — | — |
 | google_doc | N/A (frameset view — nothing to style) | | | | | | | | | | | | | | | |
