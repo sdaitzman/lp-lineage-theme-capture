@@ -271,7 +271,7 @@ Tick a cell only after Phase 5 verification for that type on that sub-site — *
 | TYPE | Layer 1 done | anchor | aquatics | birdlocale | bobscapes | e-d-forests | eco-risks | equity | gis-planning | lp-parent | se-firemap | lit-gateway | western | wildland-fire | wlfw | grasslands |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | product | ☑ 2026-08-30 (object views only; listings blocked on layout plumbing) | — | — | — | — | — | — | — | — | ✓ | ✓ | — | — | ✓ | — | — |
-| project | ☑ 2026-08-31 (object views only; via _detail-layout) | — | — | — | — | — | — | — | — | | | — | — | ✓ | — | — |
+| project | ☑ 2026-09-03 (object views only; via _detail-layout — lede, labels, captioned-image floats added on the parent-site run) | — | — | — | — | — | — | — | — | ✓ | — | — | — | ✓ | — | — |
 | spatial_data | ☑ 2026-08-31 (object views only) | — | — | — | — | — | — | — | ✓ | | — | — | — | — | — | — |
 | organization | ☑ 2026-08-31 (object views only) | — | — | — | — | — | — | — | — | ✓ | — | — | — | — | — | — |
 | person | ☑ 2026-08-31 (object views only; live visual ref pending — see css-notes) | — | — | — | — | — | — | — | — | ✓ | — | — | — | — | — | — |
