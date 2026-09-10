@@ -20,6 +20,24 @@ The source of record is the live report at **`http://localhost:8080/Plone/getCon
 | `google_doc` | 45 | `gdoc_view` | browser view `lp.content/browser/gdoc_view.pt` — a bare frameset; **N/A for styling** (see `captured-themes/_content-types/google_doc/css-notes.md`) | `scripts/import_googledocs.sh` |
 | `story` | 36 | `story_view` | browser view `lp.content/browser/story_view.pt` (the old `6custom/story_view.pt` was deleted in `cd81771`) | `scripts/import_stories.sh` |
 
+Re-checked 2026-09-09 after merging `main` (folder-view tooling) and re-running the new migrations: `getContentStats` TOTAL is still 9514 and every count above is unchanged.
+
+**Custom types with no instances (not in scope until content exists).** `lp.content` defines 18 custom FTIs; the 7 above are the ones with content. The other 11 have zero instances locally and no importer, so there is nothing to style yet — they are listed so the omission is explicit, not accidental:
+
+| Portal type | Default view | Why absent |
+|---|---|---|
+| `video` | `video_view` | importer creates nothing (FTI `global_allow=False`, workaround commented out) — known blocked issue |
+| `audio` | `audio_view` | no importer |
+| `biblio_reference` | `view` | no importer |
+| `case_study` | `view` | no importer |
+| `cbnrm_annotation` | `annotation_view` | no importer |
+| `custom_link` | `custom_link_view` | no importer |
+| `megamenu_detail` | `megamenu_detail_view` | no importer |
+| `staff_spotlight` | `staff_spotlight_view` | no importer |
+| `Document`, `Event`, `News Item` (lp.content overrides of stock FTIs) | stock | stock types — Barceloneta/theme scope, not this plan |
+
+When one of these gains an importer, add it to the roster table and run the pipeline; the Layer 1 partial goes in the same `content-types/` folder.
+
 When this plan refers to `TYPE`, substitute the **Portal type** column. When it refers to `SITE`, substitute a slug from the sub-site roster in `subsite-theme-replication.md`.
 
 **Scope note:** a `TYPE` run covers BOTH the individual object views above AND the container/listing displays that present instances of the type (e.g. `/resources/lp-products` for `product`) — see **Container & listing displays** below.
@@ -80,45 +98,83 @@ imported from that theme's `theme.scss` **after** `custom`:
 
 Keep the same `body.portaltype-*` scoping and internal organization (one commented section per type) so overrides are findable.
 
-### Container & listing displays
+### Two levels of display: object views vs. folder displays
+
+Plone renders a URL with **two independent choices**, and the plan tracks them separately
+because they are configured, migrated, and styled differently:
+
+| | Object view (the item itself) | Folder display (a container listing its children) |
+|---|---|---|
+| What decides it | The item's FTI: `default_view`, or the item's own `layout` property if the editor picked another entry from the FTI's `view_methods` (the "Display" menu) | The container's `layout` property (also picked from **its** FTI's `view_methods`), **or** its `default_page` — a child shown *instead of* any listing |
+| Who owns the template | `lp.content` — a `6custom/<view>.pt` skin template or a `browser:page` (product_view, story_view, …) | `lp.content` — `6custom/<layout>.pt` (grid_layout, folder_summary_view, …) or a `browser:page` (contents_full) |
+| Body classes to scope CSS | `portaltype-<type>` + `template-<view>` (e.g. `portaltype-product template-product_view`) | `portaltype-folder` (or `-collection`) + `template-<layout>`. **Scope on `template-<layout>`**, never on `portaltype-folder` — the same folder type carries 20+ different layouts |
+| What the CSS styles | One item's fields | Tiles/rows for items of **many** types at once; per-type tweaks hang off the tile's `contenttype-<type>` class |
+| How it was migrated | Importers created the items; FTIs came with `lp.content`'s profile — object views work out of the box | Exported to `migration/lp_folder_layouts.tsv` (1263 folders: `layout_property` + `default_page`); applied by `scripts/assign_folder_views.sh` (`src/lp.content/scripts/assign_folder_views.py`) |
+| Local URL while the plumbing is incomplete | `/Plone/<path>` | `/Plone/<folder>/<layout>` — skin templates and browser views render by **direct traversal** regardless of `view_methods`, and the body still gets `template-<layout>`, so listing CSS can be developed and verified before folders default to them |
+
+Two Plone 6 rules that bite here: (a) `default_view_fallback` — a folder whose `layout` names something not in its FTI's `view_methods` silently renders `listing_view`; (b) `assign_folder_views.py` runs with `VALIDATE_LAYOUTS = True`, so it refuses to assign any layout not in `getAvailableLayouts()` and reports it under "Unavailable source layouts" instead. Both hinge on the same missing piece: **an `lp.content` GenericSetup `types/Folder.xml` (and `Collection.xml`) adding the legacy layouts to `view_methods`** (or `LAYOUT_MAP` entries mapping Plone-4 stock names to Plone-6 ones). That is an `lp.content` change and needs sign-off.
+
+### Folder-display roster (from `migration/lp_folder_layouts.tsv`, 2026-09-09)
+
+Explicit `layout_property` values on the 1263 exported folders, bucketed by sub-site path prefix. Live body class confirmed by curl where a public page exists. "Local" = what `/<folder>/<layout>` does on Plone 6 today (after the 2026-09-09 migrations).
+
+| Layout (`template-*`) | Total | Where (top sub-sites) | Live body class | Local direct render | Plone 6 note |
+|---|---|---|---|---|---|
+| `folder_summary_view` | 620 | lp-parent 201, wlfw 184, aquatics 83, grasslands 49, edf 40, wildland-fire 24 | `template-folder_summary_view` (also what `folder_summary_alpha` renders as) | **500** `AttributeError: @@kss_field_decorator_view` — Plone-4 KSS reference in `6custom/folder_summary_view.pt` | closest stock: `summary_view` |
+| `contents_full` | 440 | se-firemap 86, lp-parent 85, wlfw 66, wildland-fire 64, aquatics 51 | `template-contents_full` | **500** `AttributeError: 'RequestContainer' object has no attribute 'usaid_text_sentence'` — template calls a `bl_scripts` skin script, but the `bl_scripts` layer from `skins.xml` is not in `portal_skins` (profile change not applied to this DB) | browser view `@@contents_full` (FolderView/CollectionView) + `6custom/contents_full.pt`, both rewritten on main 2026-09-07 |
+| `folder_full_view` | 56 | lp-parent 31 | `template-folder_full_view` | 404 — no template | Plone 4 stock → `full_view` (needs `LAYOUT_MAP`) |
+| `grid_layout` | 48 | aquatics 13, wlfw 9, lp-parent 7, edf 5, grasslands 5, western 3, se-firemap 3 | `template-grid_layout` | **200** ✓ | `6custom/grid_layout.pt`, rewritten on main 2026-09-07 (raw catalog brains) |
+| `folder_summary_alpha` | 25 | lp-parent 22, gis-planning 3 | `template-folder_summary_view` | 500 (same KSS error) | alphabetical variant of summary view |
+| `galleryview` | 9 | lp-parent 6 | `template-galleryview` | 404 — no template | collective.plonetruegallery — not installed |
+| `folder_listing` | 4 | | (private) | 200 `template-folder_listing` | Plone 4 stock → `listing_view` |
+| `folder_tabular_view` | 4 | | `template-folder_tabular_view` | 404 | Plone 4 stock → `tabular_view` |
+| `folder_contents_alpha` | 3 | | (private) | 404 | new `6custom/alphabetical.pt` (200, `template-alphabetical`) is the intended replacement — needs `LAYOUT_MAP` |
+| `chronological` | 3 | lp-parent (news/events) | `template-chronological` | **200** ✓ (`6custom/chronological.pt`, new on main) | stock dl/dt/dd listing on live |
+| `staff_directory` | 2 | wlfw | (private) | untested | `6custom/staff_directory.pt` |
+| section landing pages: `product_section` `/resources/lp-products`, `project_section` `/projects`, `research_section` `/research`, `resources_section` `/resources` | 1 each | lp-parent | `template-<name>` | `product_section` **503** `KeyError: 'getProjectVocabDict'`; the other three 200 | these are the type-listing pages the object-view runs deferred |
+| sub-site homes: `wlfw_home`, `fire_home`, `bobscapes_home`, `equity_home`, `online_learning_en`, `people-search` | 1 each | | | untested | chrome — `subsite-theme-replication.md` scope |
+| `folder_leadimage_view`, `atct_album_view` | 1 each | | | 404 | Plone 4 stock → `album_view` |
+
+(36 rows have no `layout_property`; 24 exported folders do not exist locally; 649 rows carry a `default_page`.)
+
+### Prerequisite status after the 2026-09-09 migration run
+
+Run on the existing DB (no reset — no content importer changed since the last full run), backend stopped, in this order:
+
+1. `scripts/import_catalog_schema.sh` — 45 indexes + 18 metadata columns created (getThreats, kwProductTypes*, featured, expertise, …); 27/29 already present; 2 type mismatches left as-is (`start`/`end`: Plone 4 DateIndex vs Plone 6 DateRecurringIndex). Two `plone.dexterity.schema` errors during reindex: behaviors `solr.fields` and `geolocatable` referenced by the `story` FTI are not installed.
+2. `scripts/import_zmi_scripts_bl.sh` — 59 ZODB Script (Python) objects imported into `portal_skins/custom_scripts`; 16 have Python-2 compile errors (`print obj.absolute_url()` etc.). That ZODB folder is **not** on the skin path, and neither is the filesystem `bl_scripts` layer.
+3. `scripts/assign_folder_views.sh` — **359 default pages set** (folders now show their default page as on live); **0 layouts assigned, 1203 skipped as unavailable** because Folder/Collection `view_methods` are still stock (`album_view full_view listing_view summary_view tabular_view event_listing fullcalendar-view`); 272 default pages skipped because the child does not exist locally; 24 folders missing.
+
+So the listing half of every type is still blocked on `lp.content` work (sign-off needed, in priority order): (1) `view_methods` for Folder/Collection or `LAYOUT_MAP`; (2) apply the `skins.xml` change so `bl_scripts` is on the skin path (fixes `contents_full`); (3) `folder_summary_view.pt` KSS reference; (4) `product_section` needs `getProjectVocabDict`; (5) story `wide` image scale (object views, see story css-notes); (6) organization Archetypes accessors (see organization css-notes).
+
+### Container & listing displays — how a listing run works
 
 Styling a type is not done when its object view matches — the folders (and old
-Topics/Collections) that LIST instances of the type are part of the same run:
+Topics/Collections) that LIST instances of the type are part of the same run. A
+**listing run** takes a `LAYOUT` from the folder-display roster instead of a `TYPE`:
 
-1. **Enumerate** them while bucketing URLs in Phase 1: the parent paths of the type's
-   instances, plus any section landing pages that present the type. Record each in
-   `SAMPLE.md` as `folder | live layout | local layout | renders locally?`.
-2. **Identify the live layout** from the live page's `body.template-<name>` class.
-   These are mostly custom Plone-4 section templates in `6custom/` (verified live:
-   `/resources/lp-products` → `template-product_section`; wildland-fire
-   `research/products` → `template-contents_full`; `research` → `template-grid_layout`
-   on a `portaltype-topic`), NOT stock folder listings.
-3. **Layout plumbing** (one-time prerequisites, flagged during the product pilot —
-   these are `lp.content` changes, not theme changes, and need user sign-off):
-   - Plone 6 FTIs have `default_view_fallback` enabled: a folder whose `layout` names
-     a view method not registered in the FTI's `view_methods` silently falls back to
-     the default (`listing_view`). The custom section layouts must be added to the
-     Folder (and Topic/Collection) FTI `view_methods` via a GenericSetup `types/`
-     profile in `lp.content` before any folder can use them.
-   - Per-folder layout assignments were not migrated. Live-side
-     `lp_scripts/export_folder_layouts_json.py` exists; an `import_folder_layouts`
-     importer is still needed.
-   - Each `6custom` section template must be render-tested on Plone 6 before styling
-     (several Plone-4 templates are known-broken — cf. the `document_view.pt`
-     shadowing incident).
-4. **Style** listing displays with the same two-layer scheme, scoped under
-   `body.template-<section_template>` (NOT `portaltype-folder`, which is too broad).
-   Put the rules in the owning type's Layer 1 partial (e.g. `product_section` styles
-   in `_product.scss`); lift selectors shared by several section templates (e.g. the
-   `grid-container-*` family) into a `_listings.scss` partial when the second type
-   needs them.
-5. **Verify** listing pages exactly like object pages (CRITICAL section): full-page,
-   both widths, against the live folder URL — including the search/filter/sort
-   controls these section templates carry.
+1. **Sample** from `migration/lp_folder_layouts.tsv` (filter `layout_property == LAYOUT`,
+   skip rows with a `default_page` — those render the page, not the listing), bucket by
+   sub-site, curl the live URL for the `require_login` redirect, and confirm the local
+   direct render `/<folder>/<LAYOUT>` returns 200. Record in
+   `captured-themes/_listings/<LAYOUT>/SAMPLE.md`.
+2. **Capture** live at 1440/390 into `captured-themes/_listings/<LAYOUT>/screenshots/`;
+   local at 1660/390 via the direct URL (body class is identical).
+3. **Analyze** exactly as Phase 2: extract live `ploneCustom.css` + `base.css` rules for
+   the layout's selectors (`.grid_layout`, `.tileItem`, `.tileHeadline`, …), measure
+   computed styles, audit markup (live Plone 4 vs local Plone 6 template), write
+   `css-notes.md`.
+4. **Implement** in `_shared/scss/content-types/_listings.scss`, scoped
+   `body.template-<LAYOUT>`. Tile rules shared by several layouts (`.tileItem` chrome,
+   `.tileImage`, `.documentByLine`) live once under a grouped selector list; per-type
+   tweaks inside a tile use `.contenttype-<type>`. Type-listing section templates
+   (`product_section` etc.) stay in the owning type's partial.
+5. **Verify** like object pages, including hover states and the ≤768px single-column
+   collapse, then tick the listing checklist below.
 
-Until the plumbing in (3) lands, listing displays render as stock `listing_view`
-locally — style object views, record the listing gap in `css-notes.md`, and leave the
-checklist's listing half unticked.
+Until the `view_methods` plumbing lands, the folders themselves still render
+`listing_view` (or their newly-set default page) — the styling is real and verified, but
+only visible at the direct URL.
 
 ### Deduplication decision ladder
 
@@ -203,7 +259,7 @@ notes might).
 
 ### Phase 1: Sample & capture
 
-1.1. Fetch `http://localhost:8080/Plone/content_review_links` for the per-type counts — but note it truncates to ~10 URLs per type. Get the **full** URL list from the catalog: `GET /Plone/@search?portal_type=<TYPE>&b_size=<count>` (admin:admin, `Accept: application/json`).
+1.1. Fetch `http://localhost:8080/Plone/getContentStats` for the per-type counts (it truncates the URL list per type). Get the **full** URL list from the catalog: `GET /Plone/@search?portal_type=<TYPE>&b_size=<count>` (admin:admin, `Accept: application/json`). For a listing run, sample from `migration/lp_folder_layouts.tsv` instead (see "how a listing run works").
 
 1.2. Bucket the URLs by sub-site (path-prefix match against the roster). Pick a sample: 2–3 pages per sub-site that has instances of `TYPE`, preferring pages with rich field usage (images, downloads, long metadata). **Verify each candidate's live counterpart is publicly reachable** — much of the live content is private and redirects to `require_login`; curl the live URL with `-L` and check the final URL before committing to a sample. Record the sample list — local and mapped live URL side by side, plus rejected private candidates — in `SAMPLE.md` (1.4).
 
@@ -277,3 +333,19 @@ Tick a cell only after Phase 5 verification for that type on that sub-site — *
 | person | ☑ 2026-08-31 (object views only; live visual ref pending — see css-notes) | — | — | — | — | — | — | — | — | ✓ | — | — | — | — | — | — |
 | google_doc | N/A (frameset view — nothing to style) | | | | | | | | | | | | | | | |
 | story | ☑ 2026-09-03 (object views only; hero blocked on missing `wide` image scale — see css-notes) | — | ✓ | — | — | — | — | — | — | — | — | — | — | | | ✓ |
+
+### Listing-display checklist
+
+One row per folder layout from the folder-display roster. `blocked` = the local template does not render (see Prerequisite status); `—` = no folders with that layout on the sub-site.
+
+| LAYOUT | Layer 1 done | anchor | aquatics | birdlocale | bobscapes | e-d-forests | eco-risks | equity | gis-planning | lp-parent | se-firemap | lit-gateway | western | wildland-fire | wlfw | grasslands |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| grid_layout | ☑ 2026-09-09 (direct-URL renders; folders still default to listing_view) | | ✓ | — | — | ✓ | — | — | — | | | — | ✓ | ✓ | | ✓ |
+| chronological | ☑ 2026-09-09 (no Layer 1 rules needed — stock listing on live and local) | — | — | — | — | — | — | — | — | ✓ | — | — | — | — | — | — |
+| contents_full | blocked — `usaid_text_sentence` / `bl_scripts` skin layer | | | | | | | | | | | | | | | |
+| folder_summary_view (+ folder_summary_alpha) | blocked — KSS reference | | | | | | | | | | | | | | | |
+| product_section | blocked — `getProjectVocabDict` | | | | | | | | | | | | | | | |
+| project_section / research_section / resources_section | not started (render 200) | | | | | | | | | | | | | | | |
+| alphabetical (replacement for folder_contents_alpha) | not started (render 200; no public live sample) | | | | | | | | | | | | | | | |
+| folder_full_view / folder_listing / folder_tabular_view / atct_album_view | Plone 4 stock — map to Barceloneta `full_view` / `listing_view` / `tabular_view` / `album_view`; theme scope | | | | | | | | | | | | | | | |
+| galleryview | needs collective.plonetruegallery or a replacement — not installed | | | | | | | | | | | | | | | |
