@@ -121,14 +121,14 @@ Explicit `layout_property` values on the 1263 exported folders, bucketed by sub-
 | Layout (`template-*`) | Total | Where (top sub-sites) | Live body class | Local direct render | Plone 6 note |
 |---|---|---|---|---|---|
 | `folder_summary_view` | 620 | lp-parent 201, wlfw 184, aquatics 83, grasslands 49, edf 40, wildland-fire 24 | `template-folder_summary_view` (also what `folder_summary_alpha` renders as) | **500** `AttributeError: @@kss_field_decorator_view` — Plone-4 KSS reference in `6custom/folder_summary_view.pt` | closest stock: `summary_view` |
-| `contents_full` | 440 | se-firemap 86, lp-parent 85, wlfw 66, wildland-fire 64, aquatics 51 | `template-contents_full` | **500** `AttributeError: 'RequestContainer' object has no attribute 'usaid_text_sentence'` — template calls a `bl_scripts` skin script, but the `bl_scripts` layer from `skins.xml` is not in `portal_skins` (profile change not applied to this DB) | browser view `@@contents_full` (FolderView/CollectionView) + `6custom/contents_full.pt`, both rewritten on main 2026-09-07 |
+| `contents_full` | 440 | se-firemap 86, lp-parent 85, wlfw 66, wildland-fire 64, aquatics 51 | `template-contents_full` | **200** ✓ since 2026-09-10 (was 500 `usaid_text_sentence` until lp.content was uninstalled/reinstalled to pick up the `bl_scripts` skin layer) | browser view `@@contents_full` (FolderView/CollectionView) + `6custom/contents_full.pt`, both rewritten on main 2026-09-07 |
 | `folder_full_view` | 56 | lp-parent 31 | `template-folder_full_view` | 404 — no template | Plone 4 stock → `full_view` (needs `LAYOUT_MAP`) |
 | `grid_layout` | 48 | aquatics 13, wlfw 9, lp-parent 7, edf 5, grasslands 5, western 3, se-firemap 3 | `template-grid_layout` | **200** ✓ | `6custom/grid_layout.pt`, rewritten on main 2026-09-07 (raw catalog brains) |
 | `folder_summary_alpha` | 25 | lp-parent 22, gis-planning 3 | `template-folder_summary_view` | 500 (same KSS error) | alphabetical variant of summary view |
 | `galleryview` | 9 | lp-parent 6 | `template-galleryview` | 404 — no template | collective.plonetruegallery — not installed |
 | `folder_listing` | 4 | | (private) | 200 `template-folder_listing` | Plone 4 stock → `listing_view` |
 | `folder_tabular_view` | 4 | | `template-folder_tabular_view` | 404 | Plone 4 stock → `tabular_view` |
-| `folder_contents_alpha` | 3 | | (private) | 404 | new `6custom/alphabetical.pt` (200, `template-alphabetical`) is the intended replacement — needs `LAYOUT_MAP` |
+| `folder_contents_alpha` | 3 | | (private) | 404 | new `6custom/alphabetical.pt` (200, `template-alphabetical`) is the intended replacement — needs `LAYOUT_MAP`; verified structurally 2026-09-10 (no public live sample) |
 | `chronological` | 3 | lp-parent (news/events) | `template-chronological` | **200** ✓ (`6custom/chronological.pt`, new on main) | stock dl/dt/dd listing on live |
 | `staff_directory` | 2 | wlfw | (private) | untested | `6custom/staff_directory.pt` |
 | section landing pages: `product_section` `/resources/lp-products`, `project_section` `/projects`, `research_section` `/research`, `resources_section` `/resources` | 1 each | lp-parent | `template-<name>` | `product_section` **503** `KeyError: 'getProjectVocabDict'`; the other three 200 | these are the type-listing pages the object-view runs deferred |
@@ -145,7 +145,9 @@ Run on the existing DB (no reset — no content importer changed since the last 
 2. `scripts/import_zmi_scripts_bl.sh` — 59 ZODB Script (Python) objects imported into `portal_skins/custom_scripts`; 16 have Python-2 compile errors (`print obj.absolute_url()` etc.). That ZODB folder is **not** on the skin path, and neither is the filesystem `bl_scripts` layer.
 3. `scripts/assign_folder_views.sh` — **359 default pages set** (folders now show their default page as on live); **0 layouts assigned, 1203 skipped as unavailable** because Folder/Collection `view_methods` are still stock (`album_view full_view listing_view summary_view tabular_view event_listing fullcalendar-view`); 272 default pages skipped because the child does not exist locally; 24 folders missing.
 
-So the listing half of every type is still blocked on `lp.content` work (sign-off needed, in priority order): (1) `view_methods` for Folder/Collection or `LAYOUT_MAP`; (2) apply the `skins.xml` change so `bl_scripts` is on the skin path (fixes `contents_full`); (3) `folder_summary_view.pt` KSS reference; (4) `product_section` needs `getProjectVocabDict`; (5) story `wide` image scale (object views, see story css-notes); (6) organization Archetypes accessors (see organization css-notes).
+**Update 2026-09-10:** lp.content was uninstalled and reinstalled through the Add-ons control panel (the uninstall profile only removes the browser layer, so content, FTIs and catalog survive). That applied `skins.xml`: `bl_scripts` is now on the skin path, `usaid_text_sentence` resolves, and `contents_full` renders. The three migration steps were re-run afterwards with identical results (indexes/columns already present, 359 default pages already correct, 1203 layouts still unavailable). Note the profile version is still 1001 with no upgrade step — any other existing database (including production) needs the same reinstall until one is added.
+
+So the listing half of every type is still blocked on `lp.content` work (sign-off needed, in priority order): (1) `view_methods` for Folder/Collection or `LAYOUT_MAP`; (2) ~~apply the `skins.xml` change~~ done locally by reinstall — an upgrade step is still the right fix; (3) `folder_summary_view.pt` KSS reference; (3b) `contents_full.pt` acquires the site root's front-page `text` when a folder has none, printing Plone's "Welcome!" boilerplate above every listing; (4) `product_section` needs `getProjectVocabDict`; (5) story `wide` image scale (object views, see story css-notes); (6) organization Archetypes accessors (see organization css-notes).
 
 ### Container & listing displays — how a listing run works
 
@@ -342,10 +344,10 @@ One row per folder layout from the folder-display roster. `blocked` = the local 
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | grid_layout | ☑ 2026-09-09 (direct-URL renders; folders still default to listing_view) | | ✓ | — | — | ✓ | — | — | — | | | — | ✓ | ✓ | | ✓ |
 | chronological | ☑ 2026-09-09 (no Layer 1 rules needed — stock listing on live and local) | — | — | — | — | — | — | — | — | ✓ | — | — | — | — | — | — |
-| contents_full | blocked — `usaid_text_sentence` / `bl_scripts` skin layer | | | | | | | | | | | | | | | |
+| contents_full | ☑ 2026-09-10 (direct-URL renders; se-firemap Layer 2 for its 220px thumbnail) | — | | — | | ✓ | | | ✓ | | ✓ | | | ✓ | | ✓ |
 | folder_summary_view (+ folder_summary_alpha) | blocked — KSS reference | | | | | | | | | | | | | | | |
 | product_section | blocked — `getProjectVocabDict` | | | | | | | | | | | | | | | |
 | project_section / research_section / resources_section | not started (render 200) | | | | | | | | | | | | | | | |
-| alphabetical (replacement for folder_contents_alpha) | not started (render 200; no public live sample) | | | | | | | | | | | | | | | |
+| alphabetical (replacement for folder_contents_alpha) | ☑ 2026-09-10 structural only (stock listing markup; no public live sample — 3 source folders private) | — | — | — | — | — | — | — | — | ✓ | — | — | — | — | | — |
 | folder_full_view / folder_listing / folder_tabular_view / atct_album_view | Plone 4 stock — map to Barceloneta `full_view` / `listing_view` / `tabular_view` / `album_view`; theme scope | | | | | | | | | | | | | | | |
 | galleryview | needs collective.plonetruegallery or a replacement — not installed | | | | | | | | | | | | | | | |
