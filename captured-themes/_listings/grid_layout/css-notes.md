@@ -65,3 +65,35 @@ Merriweather 22.4/600 brand colour, no underline; byline 85% #666; body padding 
 read-more 12px/600/#1f5c90/uppercase on #fff, hover #f38b1a; tile hover shadow
 0 5px 10px #ddd — all equal to live. 390: one tile per row, full width. Remaining
 deltas are the four markup/import items above; none is CSS.
+
+## 2026-09-27 — issue #70 "Uneven grid layout display" (fixed, Layer 1 rewrite)
+
+**Symptom.** Rows of 3, 4, 5 and 8 tiles on the same page (measured on wildland-fire
+`/image-gallery` at 1660: row widths `208/253/208/270/208`, then `329/226/293/327`, then
+eight tiles of 97–153px, then three of 402px). Tiles also overflowed their row.
+
+**Root cause.** Two sub-site themes carried, verbatim from their live theme CSS,
+`.grid_layout .tileItem { flex: 1 }` (`wildland-fire/scss/_custom.scss`,
+`se-firemap/scss/_custom.scss`). `flex: 1` expands to `flex: 1 1 0%`: flex-basis 0 plus
+grow, so the Layer 1 `width: calc((90% - 50px)/3 - 1px)` is ignored and each row packs
+as many tiles as their *min-content* widths allow (flex items default `min-width:auto`),
+then stretches them to fill. Confirmed by enumerating the loaded rules on the page:
+`.grid_layout .tileItem {flex:1 1 0%}` from the theme bundle after the Layer 1 width.
+On the other 13 sites the flex version held at 3-up only because nothing set `flex`.
+
+**Fix.** `_shared/scss/content-types/_listings.scss` now lays the tiles out with CSS
+grid instead of flex: `.grid_layout {display:grid; grid-template-columns:repeat(3,
+minmax(0,1fr)); gap:30px; align-items:start}`, `.tileItem {width:auto; min-width:0;
+margin:0}`. `flex` has no effect on grid items, so the two theme overrides became
+harmless; they were reduced to their background colour, and their live `@media
+(max-width:1130px)` single-column breakpoint was re-expressed as
+`grid-template-columns: minmax(0,1fr)`. Layer 1 breakpoints: 2 columns ≤991px, 1 column
+≤768px (live: 1 column ≤768px). `minmax(0,1fr)` + `overflow-wrap:anywhere` on the
+headline stop long unbreakable titles/URLs from widening a column.
+
+**Verified.** wildland-fire `/image-gallery` (20 tiles): `grid-template-columns` computed
+`412px 412px 412px`, 7 rows, every tile 412px at x 0/442/884. grasslands `/training`
+(4 tiles, portlet column): 3-up at 1660, single column at 390. Card chrome unchanged
+(1px #ededed, hover shadow, 220px cover band, 1.4rem headline, read-more pill).
+Folders now render the layout at their plain URL (the Folder FTI `view_methods` change
+in PR #71 is applied to the local DB), so the `/grid_layout` suffix is no longer needed.
